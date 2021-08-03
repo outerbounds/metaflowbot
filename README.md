@@ -49,5 +49,5 @@ Users can message the bot without `@` mentions via direct messages. The bot will
 - [ ] Create Deployment on cloudformation 
     - [ ] Check Auth of the deployed template.
     - [ ] Deploy on ECS as a Fargate task 
-- [ ] Deploy on Heroku with New OSS Code.
+- [X] Deploy on Heroku with New OSS Code.
 - [ ] Document the Rule data structure
