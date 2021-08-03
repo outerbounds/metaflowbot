@@ -2,7 +2,7 @@ name: deploy
 on:
   push:
     tags: releases/[1-9]+.[0-9]+.[0-9]+
-    branches: master
+    branches: main
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -10,8 +10,10 @@ jobs:
       - uses: actions/checkout@v2
       - uses: akhileshns/heroku-deploy@v3.12.12 # This is the action
         with:
+          # How to create : https://help.heroku.com/PBGP6IDE/how-should-i-generate-an-api-key-that-allows-me-to-use-the-heroku-platform-api
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "metaflow-bot" #Must be unique in Heroku
+          # User address under which the heroku app is configured
           heroku_email: ${{secrets.ADMIN_USER_ADDRESS}}
           checkstring: "ok"
           usedocker: true
