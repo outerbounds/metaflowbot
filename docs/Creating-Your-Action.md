@@ -34,9 +34,5 @@ RULES = MFBRules.make_subpackage_rules(data)
 from . import commands
 ```
 
-## Examples : Jokes Command
-
-- The Jokes command can be installed from [this](../extensions/jokes-command) directory.
-- Any custom action needs to follow same folder structure as given in the Jokes Command
-- After doing a `pip install` of the `metaflowbot`, you can install the `jokes-command` by doing a `pip install .` in [this](../extensions/jokes-command) directory.
-- The [MANIFEST.in](../extensions/jokes-command/MANIFEST.in) helps ensure the `rules.yml` file also present when the action is installed.
+### Examples
+- [Jokes Command](https://github.com/outerbounds/metaflowbot-jokes-action)
