@@ -1,5 +1,5 @@
 metaflow
-timeago
-pyyaml
+timeago==1.0.15
+pyyaml==5.4.1
 slack_sdk==3.7.0
 requests

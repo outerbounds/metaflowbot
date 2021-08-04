@@ -78,10 +78,6 @@ The setup follows two parts.
         -e USERNAME=$(echo $USERNAME) \
         -e METAFLOW_SERVICE_AUTH_KEY=$(echo $METAFLOW_SERVICE_AUTH_KEY) \
         -e METAFLOW_SERVICE_URL=$(echo $METAFLOW_SERVICE_URL) \
-        -e ADMIN_USER_ADDRESS=$(echo $METAFLOW_SERVICE_URL) \
         -e METAFLOW_DATASTORE_SYSROOT_S3=$(echo $METAFLOW_DATASTORE_SYSROOT_S3) \
-        -e METAFLOW_DATATOOLS_SYSROOT_S3=$(echo $METAFLOW_DATATOOLS_SYSROOT_S3) \
-        -e METAFLOW_DEFAULT_METADATA=service \
-        -e METAFLOW_DEFAULT_DATASTORE=s3 \
         metaflowbot
     ```
