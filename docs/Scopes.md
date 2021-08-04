@@ -16,15 +16,15 @@ Current Slack Permission Scopes Based on the current version of the code.
 # Slack Event Subsciptions
 
 1. [`app_metion`](https://api.slack.com/events/app_mention) : To get events when `@` mentioned on channel.  
-2. ['message.im'](https://api.slack.com/events/message.im) : To get direct message events 
+2. [`message.im`](https://api.slack.com/events/message.im) : To get direct message events 
 
 # Slack API Rate Limits
 
 
 
-| Where is it Needed                                                          | API Call              | Links                                               | Rate Limt Tier               |     |
-|:--------------------------------------------------------------------------- |:--------------------- |:--------------------------------------------------- |:---------------------------- |:--- |
-| To send messages via Slack client                                           | chat_postMessage      | https://api.slack.com/methods/chat.postMessage      | 1 message/per channel/second |     |
-| To read messages from Slack admin channel (Figure sec around this)          | conversations_history | https://api.slack.com/methods/conversations.history | 50 Req/min                   |     |
-| To read the Slack admin channel thread for the bot (Figure sec around this) | conversations_replies | https://api.slack.com/methods/conversations.replies | 50 Req/min                   |     |
-| To create threads with the bot                                                  | conversations_open    | https://api.slack.com/methods/conversations.open    | 50 Req/min                   |     |
+| Where is it Needed                                                          | API Call              | Links                                               | Rate Limt Tier               |
+|:--------------------------------------------------------------------------- |:--------------------- |:--------------------------------------------------- |:---------------------------- |
+| To send messages via Slack client                                           | chat_postMessage      | https://api.slack.com/methods/chat.postMessage      | 1 message/per channel/second |
+| To read messages from Slack admin channel (Figure sec around this)          | conversations_history | https://api.slack.com/methods/conversations.history | 50 Req/min                   |
+| To read the Slack admin channel thread for the bot (Figure sec around this) | conversations_replies | https://api.slack.com/methods/conversations.replies | 50 Req/min                   |
+| To create threads with the bot                                                  | conversations_open    | https://api.slack.com/methods/conversations.open    | 50 Req/min                   |
