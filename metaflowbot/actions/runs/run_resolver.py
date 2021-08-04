@@ -28,7 +28,7 @@ class RunResolverException(Exception):
         self.flow = flow
 
     def __str__(self):
-        return "Couldn't find the run. :meow_dead: "
+        return "Couldn't find the run. :expressionless: "
 
 
 class RunNotFound(RunResolverException):

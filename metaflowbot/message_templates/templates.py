@@ -14,10 +14,10 @@ SLACK_MAX_BLOCKS = 50
 
 
 class HEADINGS(Enum):
-    NO_FLOWS = "No flows found :meow_dead:"
-    NO_RUNS = "No runs matched :meow_dead:"
+    NO_FLOWS = "No flows found :expressionless:"
+    NO_RUNS = "No runs matched :expressionless:"
     NO_S3_DATASTORE = "Seems like the flow was run on local. "\
-                    "Metaflow bot only currently supports S3 as a datastore :meow_dead:"
+                    "Metaflow bot only currently supports S3 as a datastore :expressionless:"
 
 
 class RESPONSES(Enum):
