@@ -117,11 +117,17 @@ def reply_inspect(obj, run_id):
 
             if not discovered_datastore:
                 discovered_datastore = True
-                object_storage_loc = tasks[0]['name']._object['location']
-                if not object_storage_loc.startswith('s3://'):
-                    # As task.successful is linked to S3
-                    # We check : https://github.com/Netflix/metaflow/blob/9f832e62b3d4288acae8de483dc5709d660dc347/metaflow/client/core.py#L712
+                # to derive datastore location we use name as a heuristic
+                if 'name' in tasks[0]:
+                    object_storage_loc = tasks[0]['name']._object['location']
+                    if not object_storage_loc.startswith('s3://'):
+                        # As task.successful is linked to S3
+                        # We check : https://github.com/Netflix/metaflow/blob/9f832e62b3d4288acae8de483dc5709d660dc347/metaflow/client/core.py#L712
+                        local_ds = True
+                else:
+                    # if name is not present right now just do local_ds = True
                     local_ds = True
+                    
 
             if not local_ds:
                 task_success_flag = are_tasks_success(tasks)
