@@ -6,3 +6,4 @@
 2. [Bot Code Architecture](./Architecture.md)
 3. [Slack Permissions and Scopes](./Scopes.md)
 4. [Creating Custom/New Actions](Creating-Your-Action.md)
+5. [AWS Deployment](./Deployment.md)

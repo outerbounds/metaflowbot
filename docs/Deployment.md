@@ -20,3 +20,7 @@ Retrieval of slack related tokens is provided [here](./Setup.md).
     ![](./images/cfn-deploy.png)
 
 3. Go Ahead and start talking to the bot :) 
+
+## Manually Configuring Bot
+
+TODO
