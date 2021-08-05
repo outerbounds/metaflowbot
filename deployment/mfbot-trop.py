@@ -250,7 +250,7 @@ task_definition = BotDeploymentTemplate.add_resource(
         ContainerDefinitions=[
             ContainerDefinition(
                 Name="metaflowbot",
-                Image="valaygaurang/metaflowbot:0.9.11",
+                Image="valaygaurang/metaflowbot:0.9.12",
                 Essential=True,
                 Environment = [
                     Environment(**dict(Name=k,Value=v)) for k,v in ENV_DICT.items()

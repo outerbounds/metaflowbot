@@ -124,7 +124,7 @@ Resources:
             - Name: METAFLOW_DEFAULT_METADATA
               Value: service
           Essential: true
-          Image: valaygaurang/metaflowbot:0.9.11
+          Image: valaygaurang/metaflowbot:0.9.12
           Name: metaflowbot
       Cpu: '4096'
       ExecutionRoleArn: !GetAtt 'EcsClusterRole.Arn'
