@@ -31,10 +31,6 @@ while server runs forever: # metaflowbot.server.MFBServer.loop_forever()
 ```
 
 ## Events
-
-### `lost_process`
-
-> Event created when processed dead processes are detected **(?)**
 ### `new_thread`
 
 > When a completely new thread is created
