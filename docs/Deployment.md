@@ -7,7 +7,7 @@ There are two ways to deploy the metaflowbot on AWS:
 
 ## Deploying Via CloudFormation
 
-The [CloudFormation template](../deployment/mfbot-cf-template.yml) provided in the [deployment](../deployment) folder requires Slack related authentication tokens and Metadata service related authentication; These need to be created on secretsmanager. The reference to those secrets will be used in the CloudFormation template deployment. 
+The [CloudFormation template](../deployment/mfbot-cfn-template.yml) provided in the [deployment](../deployment) folder requires Slack related authentication tokens and Metadata service related authentication; These need to be created on secretsmanager. The reference to those secrets will be used in the CloudFormation template deployment. 
 
 Retrieval of slack related tokens is provided [here](./Setup.md). 
 
