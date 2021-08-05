@@ -46,8 +46,8 @@ Users can message the bot without `@` mentions via direct messages. The bot will
 - [How to make threads in slack via python API](https://slack.dev/python-slack-sdk/web/index.html)
 
 ## PRE OSS Release TODOS
-- [ ] Create Deployment on cloudformation 
-    - [ ] Check Auth of the deployed template.
-    - [ ] Deploy on ECS as a Fargate task 
+- [x] Create Deployment on cloudformation 
+    - [x] Check Auth of the deployed template.
+    - [x] Deploy on ECS as a Fargate task 
 - [X] Deploy on Heroku with New OSS Code.
 - [ ] Document the Rule data structure
