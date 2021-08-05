@@ -1,0 +1,18 @@
+name: Docker Image CI
+on:
+  release:
+    branches: [ deployment ]    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+          repository: ${{ secrets.DOCKER_USERNAME }}/metaflowbot
+          tag_with_ref: true
+          tag_with_sha: true
+          tags: "latest"
+          dockerfile: ${{ github.workspace }}/Dockerfile
