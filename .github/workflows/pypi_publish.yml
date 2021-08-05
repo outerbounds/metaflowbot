@@ -7,11 +7,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python 3.7.2
+    - name: Set up Python 3.7.x
       uses: actions/setup-python@v1
       with:
-        python-version: '3.7.2'
-    - name: Install Python 3.7.2 dependencies
+        python-version: '3.7.x'
+    - name: Install Python 3.7.x dependencies
       run: |
         python3 -m pip install --upgrade pip
         pip3 install setuptools wheel twine
