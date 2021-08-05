@@ -1,0 +1,192 @@
+Description: Cloudformation Stack for Deploying Metaflowbot
+Parameters:
+  AdminUserAddress:
+    Description: Email address of the admin user in the workspace
+    Type: String
+  DeploymentAvailablityZone:
+    Description: Availability zone where the bot gets deployed
+    Type: AWS::EC2::AvailabilityZone::Name
+  MetadaAuth:
+    Description: Auth header for Metadataservice
+    Type: String
+  MetadataServiceUrl:
+    Description: URL to the Metaflow metadata service
+    Type: String
+  MetaflowS3BucketARN:
+    Description: Metaflow S3 Bucket ARN
+    Type: String
+  MetaflowS3Root:
+    Description: S3 Root Path Of Metaflow
+    Type: String
+  MetaflowUsername:
+    Description: Username for Metaflow
+    Type: String
+  SlackAppToken:
+    Description: App Token Created from Slack
+    Type: String
+  SlackBotToken:
+    Description: 'Bot Token Created From slack '
+    Type: String
+Resources:
+  EcsClusterRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+        Version: '2012-10-17'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM
+      Path: /
+    Type: AWS::IAM::Role
+  EcsTaskRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+        Version: '2012-10-17'
+      Path: /
+    Type: AWS::IAM::Role
+  InternetGatewayAttachment:
+    Properties:
+      InternetGatewayId: !Ref 'MFBotInternetGateway'
+      VpcId: !Ref 'MetaflowbotPublicVpc'
+    Type: AWS::EC2::VPCGatewayAttachment
+  MFBotCluster:
+    Type: AWS::ECS::Cluster
+  MFBotInternetGateway:
+    Type: AWS::EC2::InternetGateway
+  MFBotSecurityGroup:
+    Properties:
+      GroupDescription: Allow All In and outbound traffic
+      SecurityGroupEgress:
+        - CidrIp: '0.0.0.0/0'
+          FromPort: 0
+          IpProtocol: tcp
+          ToPort: 65534
+      SecurityGroupIngress:
+        - CidrIp: '0.0.0.0/0'
+          FromPort: 0
+          IpProtocol: tcp
+          ToPort: 65534
+      VpcId: !Ref 'MetaflowbotPublicVpc'
+    Type: AWS::EC2::SecurityGroup
+  MetaflowbotDeployment:
+    Properties:
+      Cluster: !Ref 'MFBotCluster'
+      DesiredCount: 1
+      LaunchType: FARGATE
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !Ref 'MFBotSecurityGroup'
+          Subnets:
+            - !Ref 'MetaflowbotDeploymentSubnet'
+      TaskDefinition: !Ref 'MetaflowbotTaskDefinition'
+    Type: AWS::ECS::Service
+  MetaflowbotDeploymentSubnet:
+    Properties:
+      AvailabilityZone: !Ref 'DeploymentAvailablityZone'
+      CidrBlock: 10.0.0.0/24
+      MapPublicIpOnLaunch: true
+      VpcId: !Ref 'MetaflowbotPublicVpc'
+    Type: AWS::EC2::Subnet
+  MetaflowbotPublicVpc:
+    Properties:
+      CidrBlock: 10.0.0.0/16
+    Type: AWS::EC2::VPC
+  MetaflowbotTaskDefinition:
+    Properties:
+      ContainerDefinitions:
+        - Environment:
+            - Name: SLACK_BOT_TOKEN
+              Value: !Ref 'SlackBotToken'
+            - Name: ADMIN_USER_ADDRESS
+              Value: !Ref 'AdminUserAddress'
+            - Name: SLACK_APP_TOKEN
+              Value: !Ref 'SlackAppToken'
+            - Name: USERNAME
+              Value: !Ref 'MetaflowUsername'
+            - Name: METAFLOW_SERVICE_AUTH_KEY
+              Value: !Ref 'MetadaAuth'
+            - Name: METAFLOW_SERVICE_URL
+              Value: !Ref 'MetadataServiceUrl'
+            - Name: METAFLOW_DATASTORE_SYSROOT_S3
+              Value: !Ref 'MetaflowS3Root'
+            - Name: METAFLOW_DEFAULT_DATASTORE
+              Value: s3
+            - Name: METAFLOW_DEFAULT_METADATA
+              Value: service
+          Essential: true
+          Image: valaygaurang/metaflowbot:0.9.11
+          Name: metaflowbot
+      Cpu: '4096'
+      ExecutionRoleArn: !GetAtt 'EcsClusterRole.Arn'
+      Memory: '8192'
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+        - FARGATE
+      TaskRoleArn: !GetAtt 'EcsTaskRole.Arn'
+    Type: AWS::ECS::TaskDefinition
+  PolicyEcr:
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - ecr:GetAuthorizationToken
+            Effect: Allow
+            Resource:
+              - '*'
+          - Action:
+              - ecr:GetDownloadUrlForLayer
+              - ecr:BatchGetImage
+              - ecr:BatchCheckLayerAvailability
+            Effect: Allow
+            Resource:
+              - '*'
+            Sid: AllowPull
+        Version: '2012-10-17'
+      PolicyName: MfbotEcrPolicy
+      Roles:
+        - !Ref 'EcsClusterRole'
+    Type: AWS::IAM::Policy
+  PublicDefaultRoute:
+    Properties:
+      DestinationCidrBlock: '0.0.0.0/0'
+      GatewayId: !Ref 'MFBotInternetGateway'
+      RouteTableId: !Ref 'PublicRouteTable'
+    Type: AWS::EC2::Route
+  PublicRouteAssociation:
+    Properties:
+      RouteTableId: !Ref 'PublicRouteTable'
+      SubnetId: !Ref 'MetaflowbotDeploymentSubnet'
+    Type: AWS::EC2::SubnetRouteTableAssociation
+  PublicRouteTable:
+    Properties:
+      VpcId: !Ref 'MetaflowbotPublicVpc'
+    Type: AWS::EC2::RouteTable
+  S3AccessPolicy:
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - s3:GetObject
+            Effect: Allow
+            Resource:
+              - !Join
+                - ''
+                - - !Ref 'MetaflowS3BucketARN'
+                  - /*
+            Sid: S3GetObject
+        Version: '2012-10-17'
+      PolicyName: MetaflowbotS3AccessPolicy
+      Roles:
+        - !Ref 'EcsTaskRole'
+    Type: AWS::IAM::Policy
+
