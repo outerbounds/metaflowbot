@@ -81,7 +81,6 @@ DEPLOYMENT_AZ = BotDeploymentTemplate.add_parameter(
 )
 
 
-# TODO : VALIDATE KMS id setting for SSM Parameter store. 
 cluster = BotDeploymentTemplate.add_resource(Cluster("MFBotCluster"))
 
 
@@ -118,7 +117,6 @@ ENV_DICT = {
     "METAFLOW_DEFAULT_METADATA":"service"
 }
 
-# Todo : create secure ways of making app tokens. 
 
 # task role vs execution role : 
 # https://selfoverflow.com/questions/48999472/difference-between-aws-elastic-container-services-ecs-executionrole-and-taskr/49947471
