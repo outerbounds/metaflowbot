@@ -53,17 +53,24 @@ MFS3ARN = BotDeploymentTemplate.add_parameter(Parameter("MetaflowS3BucketARN",
                                 Type='String',\
                                 Description="Metaflow S3 Bucket ARN"))
 
+#arn:aws:secretsmanager:us-west-2:477710326853:secret:MetaflowBotSecrets-Pd46UG
+MFBOT_SECRETS_ARN = BotDeploymentTemplate.add_parameter(Parameter("MfbotSecretsArn",
+                                Type='String',\
+                                Description="ARN of the Secret holding MF Bot credentials stored in Secrets manager"))
 
-# TODO This need to be done Securely. 
+# These are Parameter Store Secure secret names. 
 METADATA_AUTH = BotDeploymentTemplate.add_parameter(Parameter("MetadaAuth",
                                 Type='String',\
-                                Description="Auth header for Metadataservice"))
+                                Default="METADATA_AUTH",\
+                                Description="Name Of Metadata Auth Parameter in Secrets Manager."))
 SLACK_APP_TOKEN = BotDeploymentTemplate.add_parameter(Parameter("SlackAppToken",
                                 Type='String',\
-                                Description="App Token Created from Slack"))
+                                Default="SLACK_APP_TOKEN",\
+                                Description="Name Of SLACK_APP_TOKEN Parameter in Secrets Manager."))
 SLACK_BOT_TOKEN = BotDeploymentTemplate.add_parameter(Parameter("SlackBotToken",
                                 Type='String',\
-                                Description="Bot Token Created From slack "))
+                                Default="SLACK_BOT_TOKEN",\
+                                Description="Name Of SLACK_BOT_TOKEN Parameter in Secrets Manager."))
 
 DEPLOYMENT_AZ = BotDeploymentTemplate.add_parameter(
     Parameter(
@@ -74,14 +81,37 @@ DEPLOYMENT_AZ = BotDeploymentTemplate.add_parameter(
 )
 
 
+# TODO : VALIDATE KMS id setting for SSM Parameter store. 
 cluster = BotDeploymentTemplate.add_resource(Cluster("MFBotCluster"))
 
+
 ENV_DICT = {
-    "SLACK_BOT_TOKEN":Ref(SLACK_BOT_TOKEN),
+    "SLACK_BOT_TOKEN":Join("",[
+                                "{{",
+                                "resolve:secretsmanager:",
+                                Ref(MFBOT_SECRETS_ARN),
+                                ":SecretString:",
+                                Ref(SLACK_BOT_TOKEN),
+                                "}}"
+                            ]),
     "ADMIN_USER_ADDRESS":Ref(ADMIN_USER_ADDRESS),
-    "SLACK_APP_TOKEN":Ref(SLACK_APP_TOKEN),
+    "SLACK_APP_TOKEN":Join("",[
+                                "{{",
+                                "resolve:secretsmanager:",
+                                Ref(MFBOT_SECRETS_ARN),
+                                ":SecretString:",
+                                Ref(SLACK_APP_TOKEN),
+                                "}}"
+                            ]),
     "USERNAME":Ref(USERNAME),
-    "METAFLOW_SERVICE_AUTH_KEY":Ref(METADATA_AUTH),
+    "METAFLOW_SERVICE_AUTH_KEY":Join("",[
+                                        "{{",
+                                        "resolve:secretsmanager:",
+                                        Ref(MFBOT_SECRETS_ARN),
+                                        ":SecretString:",
+                                        Ref(METADATA_AUTH),
+                                        "}}"
+                                    ]),
     "METAFLOW_SERVICE_URL":Ref(METADATA_SERVICE_URL),
     "METAFLOW_DATASTORE_SYSROOT_S3":Ref(MFS3ROOTPATH),
     "METAFLOW_DEFAULT_DATASTORE":"s3",
@@ -108,7 +138,7 @@ EcsClusterRole = BotDeploymentTemplate.add_resource(
                     "Action": "sts:AssumeRole",
                     "Principal": {"Service": "ecs-tasks.amazonaws.com"},
                     "Effect": "Allow",
-                }
+                },
             ],
         },
     )
@@ -160,6 +190,30 @@ PolicyEcr = BotDeploymentTemplate.add_resource(
     )
 )
 
+secrets_access_policy = BotDeploymentTemplate.add_resource(
+    PolicyType(
+        "MFBotSecretAccess",
+        # 
+        PolicyName='Metaflowbot',
+        PolicyDocument= {
+            "Version": "2012-10-17",
+            "Statement": [                
+                {
+                    "Action": [
+                       "secretsmanager:GetSecretValue",
+                    ],
+                    "Resource": [
+                        # Join('',[Ref(MFBOT_SECRETS_ARN),'/*'])
+                        Ref(MFBOT_SECRETS_ARN)
+                    ],
+                    "Effect": "Allow",
+                    "Sid": "S3GetObject",
+                },
+            ]
+        },
+        Roles=[Ref(EcsClusterRole)],
+    )
+)
 
 S3AccessPolicy = BotDeploymentTemplate.add_resource(
     PolicyType(

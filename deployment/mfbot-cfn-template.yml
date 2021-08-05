@@ -7,7 +7,8 @@ Parameters:
     Description: Availability zone where the bot gets deployed
     Type: AWS::EC2::AvailabilityZone::Name
   MetadaAuth:
-    Description: Auth header for Metadataservice
+    Default: METADATA_AUTH
+    Description: Name Of Metadata Auth Parameter in Secrets Manager.
     Type: String
   MetadataServiceUrl:
     Description: URL to the Metaflow metadata service
@@ -21,11 +22,16 @@ Parameters:
   MetaflowUsername:
     Description: Username for Metaflow
     Type: String
+  MfbotSecretsArn:
+    Description: ARN of the Secret holding MF Bot credentials stored in Secrets manager
+    Type: String
   SlackAppToken:
-    Description: App Token Created from Slack
+    Default: SLACK_APP_TOKEN
+    Description: Name Of SLACK_APP_TOKEN Parameter in Secrets Manager.
     Type: String
   SlackBotToken:
-    Description: 'Bot Token Created From slack '
+    Default: SLACK_BOT_TOKEN
+    Description: Name Of SLACK_BOT_TOKEN Parameter in Secrets Manager.
     Type: String
 Resources:
   EcsClusterRole:
@@ -61,6 +67,21 @@ Resources:
     Type: AWS::ECS::Cluster
   MFBotInternetGateway:
     Type: AWS::EC2::InternetGateway
+  MFBotSecretAccess:
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource:
+              - !Ref 'MfbotSecretsArn'
+            Sid: S3GetObject
+        Version: '2012-10-17'
+      PolicyName: Metaflowbot
+      Roles:
+        - !Ref 'EcsClusterRole'
+    Type: AWS::IAM::Policy
   MFBotSecurityGroup:
     Properties:
       GroupDescription: Allow All In and outbound traffic
@@ -101,15 +122,36 @@ Resources:
       ContainerDefinitions:
         - Environment:
             - Name: SLACK_BOT_TOKEN
-              Value: !Ref 'SlackBotToken'
+              Value: !Join
+                - ''
+                - - '{{'
+                  - 'resolve:secretsmanager:'
+                  - !Ref 'MfbotSecretsArn'
+                  - ':SecretString:'
+                  - !Ref 'SlackBotToken'
+                  - '}}'
             - Name: ADMIN_USER_ADDRESS
               Value: !Ref 'AdminUserAddress'
             - Name: SLACK_APP_TOKEN
-              Value: !Ref 'SlackAppToken'
+              Value: !Join
+                - ''
+                - - '{{'
+                  - 'resolve:secretsmanager:'
+                  - !Ref 'MfbotSecretsArn'
+                  - ':SecretString:'
+                  - !Ref 'SlackAppToken'
+                  - '}}'
             - Name: USERNAME
               Value: !Ref 'MetaflowUsername'
             - Name: METAFLOW_SERVICE_AUTH_KEY
-              Value: !Ref 'MetadaAuth'
+              Value: !Join
+                - ''
+                - - '{{'
+                  - 'resolve:secretsmanager:'
+                  - !Ref 'MfbotSecretsArn'
+                  - ':SecretString:'
+                  - !Ref 'MetadaAuth'
+                  - '}}'
             - Name: METAFLOW_SERVICE_URL
               Value: !Ref 'MetadataServiceUrl'
             - Name: METAFLOW_DATASTORE_SYSROOT_S3
