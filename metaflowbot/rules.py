@@ -34,8 +34,6 @@ class MFBRules(object):
     @staticmethod
     def make_subpackage_rules(data):
         try:
-            # Todo Run Rule Parsing here.
-            # todo check for important keys heree
             rules = yaml.load(data, Loader=yaml.SafeLoader)
         except Exception as ex:
             raise MFBRulesParseException(str(ex))
@@ -58,19 +56,6 @@ class MFBRules(object):
             # If event type of rule and event type of message don't match continue
             if event_type and event_type != event.type:
                 continue
-
-            ############################################################
-            # Todo : Verify Why there lines are there when there is no is_mention,`is_im`,`is_direct` in Rules.
-            is_mention = rule.get("is_mention")
-            if is_mention is not None and is_mention != event.is_mention:
-                continue
-            is_im = rule.get("is_im")
-            if is_im is not None and is_im != event.is_im:
-                continue
-            is_direct = rule.get("is_direct")
-            if is_direct is not None and is_direct != event.is_direct:
-                continue
-            ###################################################################
 
             message = rule.get("message")
             re_match = None
