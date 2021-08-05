@@ -274,17 +274,6 @@ efs_security_group = BotDeploymentTemplate.add_resource(ec2.SecurityGroup(
             CidrIp="0.0.0.0/0",
         )
     ],
-    # inbound rules 
-    # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-rule-1.html
-    SecurityGroupIngress=[
-        ec2.SecurityGroupRule(
-            "MFBotInboundRules",
-            ToPort=65534,
-            FromPort=0,
-            IpProtocol="tcp",
-            CidrIp="0.0.0.0/0",
-        )
-    ],
     VpcId=Ref(vpc),
     GroupDescription="Allow All In and outbound traffic",
 ))

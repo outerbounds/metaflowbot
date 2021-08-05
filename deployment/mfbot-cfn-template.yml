@@ -69,11 +69,6 @@ Resources:
           FromPort: 0
           IpProtocol: tcp
           ToPort: 65534
-      SecurityGroupIngress:
-        - CidrIp: '0.0.0.0/0'
-          FromPort: 0
-          IpProtocol: tcp
-          ToPort: 65534
       VpcId: !Ref 'MetaflowbotPublicVpc'
     Type: AWS::EC2::SecurityGroup
   MetaflowbotDeployment:
