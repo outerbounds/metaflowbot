@@ -45,18 +45,16 @@ The setup follows two parts.
 
 Use the below command for running the bot container instance on local. You can shed some metaflow variables and load a volume to the `~./metaflowconfig` to set Metaflow config related variables.
 
-    ```sh
-
-    docker run -i -t --rm \
-        -e SLACK_BOT_TOKEN=$(echo $SLACK_BOT_TOKEN) \
-        -e ADMIN_USER_ADDRESS=admin@server.com \
-        -e SLACK_APP_TOKEN=$(echo $SLACK_APP_TOKEN) \
-        -e AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY) \
-        -e AWS_ACCESS_KEY_ID=$(echo $AWS_ACCESS_KEY_ID) \
-        -e USERNAME=$(echo $USERNAME) \
-        -e METAFLOW_SERVICE_AUTH_KEY=$(echo $METAFLOW_SERVICE_AUTH_KEY) \
-        -e METAFLOW_SERVICE_URL=$(echo $METAFLOW_SERVICE_URL) \
-        -e METAFLOW_DATASTORE_SYSROOT_S3=$(echo $METAFLOW_DATASTORE_SYSROOT_S3) \
-        outerbounds/metaflowbot
-        
-    ```
+```sh
+docker run -i -t --rm \
+    -e SLACK_BOT_TOKEN=$(echo $SLACK_BOT_TOKEN) \
+    -e ADMIN_USER_ADDRESS=admin@server.com \
+    -e SLACK_APP_TOKEN=$(echo $SLACK_APP_TOKEN) \
+    -e AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY) \
+    -e AWS_ACCESS_KEY_ID=$(echo $AWS_ACCESS_KEY_ID) \
+    -e USERNAME=$(echo $USERNAME) \
+    -e METAFLOW_SERVICE_AUTH_KEY=$(echo $METAFLOW_SERVICE_AUTH_KEY) \
+    -e METAFLOW_SERVICE_URL=$(echo $METAFLOW_SERVICE_URL) \
+    -e METAFLOW_DATASTORE_SYSROOT_S3=$(echo $METAFLOW_DATASTORE_SYSROOT_S3) \
+    outerbounds/metaflowbot
+```
