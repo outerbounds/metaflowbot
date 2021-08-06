@@ -2,7 +2,7 @@
 
 The setup follows two parts.
 1. The first part is setting up the bot on Slack to get access tokens.
-2. The second part is running the Bot server manually or via a docker image or [AWS ECS](./Deployment.md).
+2. The second part is running the Bot server locally or via a docker image or [AWS ECS](./Deployment.md).
 ## Slack Setup
 
 1. [Create an App on Slack UI](https://api.slack.com/apps) using provided [manifest](../manifest.yml).
@@ -24,17 +24,20 @@ The setup follows two parts.
 ### From pip
 
 1. Export the tokens as environment variables :
+    
     ```sh
     export SLACK_APP_TOKEN=xapp-1-AAAAAAAAAAA-2222222222222-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
     export SLACK_BOT_TOKEN=xoxb-2222222222222-2222222222222-AAAAAAAAAAAAAAAAAAAAAAAA
     ```
 2. Install `metaflowbot`
+    
     ```sh
     pip install metaflowbot
     pip install metaflowbot-actions-jokes # Custom action install
     ```
 
 3. Run the BOT by providing `--admin` argument with admin user's email address; The bot will open a message thread with the admin user where the bot will maintain state related information.
+    
     ``sh
     python -m metaflowbot server --admin me@server.com
     ```
