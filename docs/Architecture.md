@@ -1,6 +1,6 @@
 
 # Event Lifecycle of Bot
-![](images/slack-bot-event-lifecycle.jpg)
+![](images/slackbot-event-lifecycle.jpg)
 
 The `MFBServer` listens to events from slack via `MFBSlackClientV2`and converts then to internal event representation. These events are matched with rules to and based on the matched rules an action is invoked.
 
