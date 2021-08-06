@@ -21,9 +21,9 @@ your_bot_action/ # the name of this dir doesn't matter
 .
 ```
 
-Every module must contain a `rules.yml`, a `__init__.py`, and a module that contains click commands imported from `metaflowbot.cli.actions`.
+Every module must contain a `rules.yml`, a `__init__.py`, and a module that contains click commands imported from `metaflowbot.cli.actions`. Every rule in the `rules.yml` should follow [this](./Architecture.md##Rule) structure
 
-The `__init__.py` inside an installable action must contain the following code to integrate with metaflowbot's actions
+The `__init__.py` inside an installable action must contain the following code to integrate with `metaflowbot`'s actions
 ```python
 import pkgutil
 
