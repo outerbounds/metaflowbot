@@ -29,6 +29,20 @@ while server runs forever: # metaflowbot.server.MFBServer.loop_forever()
                 # Calls MFBServer._take_action
                 # Every action is invoked as a seperate python process.
 ```
+## Rule 
+
+- A basic rule looks like the following:
+
+```yml
+
+- name: Generic help fallback # Name of the rule
+  event_type: user_message # Type of event the rule needs to filter
+  message: help(.*)|how to(.*) # pattern to use when filtering the message
+  action:
+    op: new-thread # Operation in metaflowbot.actions.<action_name>
+    create-thread: false # Arguement for the action to be invoked. 
+
+```
 
 ## Events
 ### `new_thread`
