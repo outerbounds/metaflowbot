@@ -38,7 +38,7 @@ The setup follows two parts.
 
 3. Run the BOT by providing `--admin` argument with admin user's email address; The bot will open a message thread with the admin user where the bot will maintain state related information.
     
-    ``sh
+    ```sh
     python -m metaflowbot server --admin me@server.com
     ```
 ### Running Via Docker Image
