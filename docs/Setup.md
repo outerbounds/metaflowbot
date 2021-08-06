@@ -46,6 +46,7 @@ The setup follows two parts.
 Use the below command for running the bot container instance on local. You can shed some metaflow variables and load a volume to the `~./metaflowconfig` to set Metaflow config related variables.
 
     ```sh
+
     docker run -i -t --rm \
         -e SLACK_BOT_TOKEN=$(echo $SLACK_BOT_TOKEN) \
         -e ADMIN_USER_ADDRESS=admin@server.com \
@@ -57,4 +58,5 @@ Use the below command for running the bot container instance on local. You can s
         -e METAFLOW_SERVICE_URL=$(echo $METAFLOW_SERVICE_URL) \
         -e METAFLOW_DATASTORE_SYSROOT_S3=$(echo $METAFLOW_DATASTORE_SYSROOT_S3) \
         outerbounds/metaflowbot
+        
     ```
