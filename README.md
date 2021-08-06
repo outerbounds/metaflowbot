@@ -25,14 +25,14 @@ Thorough Documentation is present in the [Documentation folder](./docs)
 
 ## Communicating with the bot
 
-There are two places to interact with Metaflowbot : on a `channel` or via `direct message`. But for either places, the following is the general behavior of the bot:
+There are two ways interact with the Metaflow bot. You can invite the bot on a `channel` or directly speak to it via `direct message`. For either of the two ways, the following is the general behavior of the bot:
 
 > *When a user messages the bot, the bot will open a new message thread and will engage with the user on the same thread. The user can open multiple threads with the bot. Each thread is an independent discussion*
 
 The following are interaction/UX restrictions based on where the user is conversing with the Metaflow bot.
 ### Communicating with the bot on a channel
 
-As the current [manifest.yml](./manifest.yml) only supports `app_mention` and `message.im` events. This means that when users want to talk to the bot on a channel, then they need to specifically need to mention `@flowey` or `@custombotname` to talk to the bot. We don't listen to messages on channels only `app_mentions`.
+The current [manifest.yml](./manifest.yml) only supports `app_mention` and `message.im` events. This means that users need to specifically mention `@flowey` or `@custombotname` before a command when the bot is invited to a channel. This constraint ensures we don't listen to *all* messages on a channel; only the ones where the bot is called.
 
 ### Communicating with the bot through direct messages
 
