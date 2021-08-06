@@ -36,50 +36,37 @@ BotDeploymentTemplate.set_description(
 )
 
 METADATA_SERVICE_URL = BotDeploymentTemplate.add_parameter(Parameter("MetadataServiceUrl",Type='String',\
-                                        Description="URL to the Metaflow metadata service"))
+                                        Description="URL of the metadata service"))
 
 ADMIN_USER_ADDRESS = BotDeploymentTemplate.add_parameter(Parameter(\
-                                "AdminUserAddress",
+                                "AdminEmailAddress",
                                 Type='String',\
-                                Description="Email address of the admin user in the workspace"))
-USERNAME = BotDeploymentTemplate.add_parameter(Parameter("MetaflowUsername",
-                                Type='String',\
-                                Description="Username for Metaflow"))
-MFS3ROOTPATH = BotDeploymentTemplate.add_parameter(Parameter("MetaflowS3Root",
-                                Type='String',\
-                                Description="S3 Root Path Of Metaflow"))
+                                Description="Email address of the admin user in the slack workspace"))
 
-MFS3ARN = BotDeploymentTemplate.add_parameter(Parameter("MetaflowS3BucketARN",
+# Generate ARN from the s3 url and remove ARN parameter. 
+MFS3ROOTPATH = BotDeploymentTemplate.add_parameter(Parameter("MetaflowDatastoreSysrootS3",
                                 Type='String',\
-                                Description="Metaflow S3 Bucket ARN"))
+                                Description="Amazon S3 URL for Metaflow DataStore "))
 
+MFS3ARN = Join('',['arn:aws:s3:::',Select(1,Split("s3://",Ref(MFS3ROOTPATH))),])
 #arn:aws:secretsmanager:us-west-2:477710326853:secret:MetaflowBotSecrets-Pd46UG
-MFBOT_SECRETS_ARN = BotDeploymentTemplate.add_parameter(Parameter("MfbotSecretsArn",
+MFBOT_SECRETS_ARN = BotDeploymentTemplate.add_parameter(Parameter("MetaflowbotSecretsManagerARN",
                                 Type='String',\
-                                Description="ARN of the Secret holding MF Bot credentials stored in Secrets manager"))
+                                Description="ARN of the secret holding Metaflowbot credentials in Secrets Manager"))
 
 # These are Parameter Store Secure secret names. 
-METADATA_AUTH = BotDeploymentTemplate.add_parameter(Parameter("MetadaAuth",
+METADATA_AUTH = BotDeploymentTemplate.add_parameter(Parameter("MetadataServiceAuthParameterKey",
                                 Type='String',\
-                                Default="METADATA_AUTH",\
-                                Description="Name Of Metadata Auth Parameter in Secrets Manager."))
-SLACK_APP_TOKEN = BotDeploymentTemplate.add_parameter(Parameter("SlackAppToken",
+                                Default="METADATASERVICE_AUTH_KEY",\
+                                Description="Key for Metadata service auth parameter in Secrets Manager."))
+SLACK_APP_TOKEN = BotDeploymentTemplate.add_parameter(Parameter("SlackAppTokenParameterKey",
                                 Type='String',\
-                                Default="SLACK_APP_TOKEN",\
-                                Description="Name Of SLACK_APP_TOKEN Parameter in Secrets Manager."))
-SLACK_BOT_TOKEN = BotDeploymentTemplate.add_parameter(Parameter("SlackBotToken",
+                                Default="SLACK_APP_TOKEN_KEY",\
+                                Description="Key for SLACK_APP_TOKEN parameter in Secrets Manager."))
+SLACK_BOT_TOKEN = BotDeploymentTemplate.add_parameter(Parameter("SlackBotTokenParameterKey",
                                 Type='String',\
-                                Default="SLACK_BOT_TOKEN",\
-                                Description="Name Of SLACK_BOT_TOKEN Parameter in Secrets Manager."))
-
-DEPLOYMENT_AZ = BotDeploymentTemplate.add_parameter(
-    Parameter(
-        "DeploymentAvailablityZone",
-        Type="AWS::EC2::AvailabilityZone::Name",
-        Description="Availability zone where the bot gets deployed",
-    )
-)
-
+                                Default="SLACK_BOT_TOKEN_KEY",\
+                                Description="Key for SLACK_BOT_TOKEN parameter in Secrets Manager."))
 
 cluster = BotDeploymentTemplate.add_resource(Cluster("MFBotCluster"))
 
@@ -102,7 +89,7 @@ ENV_DICT = {
                                 Ref(SLACK_APP_TOKEN),
                                 "}}"
                             ]),
-    "USERNAME":Ref(USERNAME),
+    "USERNAME":"slackbot",
     "METAFLOW_SERVICE_AUTH_KEY":Join("",[
                                         "{{",
                                         "resolve:secretsmanager:",
@@ -176,7 +163,6 @@ PolicyEcr = BotDeploymentTemplate.add_resource(
                         "ecr:GetDownloadUrlForLayer",
                         "ecr:BatchGetImage",
                         "ecr:BatchCheckLayerAvailability",
-
                     ],
                     "Resource": ["*"],
                     "Effect": "Allow",
@@ -201,7 +187,6 @@ secrets_access_policy = BotDeploymentTemplate.add_resource(
                        "secretsmanager:GetSecretValue",
                     ],
                     "Resource": [
-                        # Join('',[Ref(MFBOT_SECRETS_ARN),'/*'])
                         Ref(MFBOT_SECRETS_ARN)
                     ],
                     "Effect": "Allow",
@@ -223,9 +208,12 @@ S3AccessPolicy = BotDeploymentTemplate.add_resource(
                 {
                     "Action": [
                        "s3:GetObject",
+                       "s3:HeadObject",
+                       "s3:ListObjects",
+                       "s3:ListObjectsV2",
                     ],
                     "Resource": [
-                        Join('',[Ref(MFS3ARN),'/*'])
+                        Join('',[MFS3ARN,'/*'])
                     ],
                     "Effect": "Allow",
                     "Sid": "S3GetObject",
@@ -249,7 +237,9 @@ vpc = BotDeploymentTemplate.add_resource(ec2.VPC('MetaflowbotPublicVpc',CidrBloc
 
 subnet = BotDeploymentTemplate.add_resource(ec2.Subnet(
     "MetaflowbotDeploymentSubnet",
-    AvailabilityZone=Ref(DEPLOYMENT_AZ),
+    AvailabilityZone=Select(
+        0,GetAZs(region=Region)
+    ),
     CidrBlock="10.0.0.0/24",
     VpcId=Ref(vpc),
     MapPublicIpOnLaunch=True,
@@ -302,7 +292,7 @@ task_definition = BotDeploymentTemplate.add_resource(
         ContainerDefinitions=[
             ContainerDefinition(
                 Name="metaflowbot",
-                Image="valaygaurang/metaflowbot:0.9.12",
+                Image="valaygaurang/metaflowbot",
                 Essential=True,
                 Environment = [
                     Environment(**dict(Name=k,Value=v)) for k,v in ENV_DICT.items()
