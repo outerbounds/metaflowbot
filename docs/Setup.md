@@ -36,7 +36,7 @@ The setup follows two parts.
 
 3. Run the BOT by providing `--admin` argument with admin user's email address; The bot will open a message thread with the admin user where the bot will maintain state related information.
     ``sh
-    python -m metaflowbot --slack-bot-token $(echo $SLACK_BOT_TOKEN) --slack-app-token $(echo $SLACK_APP_TOKEN) server --admin me@server.com
+    python -m metaflowbot server --admin me@server.com
     ```
 ### Running Via Docker Image
 
