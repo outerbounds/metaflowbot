@@ -13,10 +13,11 @@ Please note that Metaflow bot can re-use existing AWS resources - for example, y
 ### VPC 
 
 1. Open the [Amazon VPC console](https://console.aws.amazon.com/vpc/) and in the left navigation pane, choose VPC Dashboard.
-2. Choose Launch VPC Wizard, VPC with a Single Public Subnet, Select.
-3. For VPC name, give your VPC a unique name.
-5. Choose Create VPC.
-6. When the wizard is finished, choose OK.
+2. Choose _Launch VPC Wizard_, 
+3. Choose _VPC with a Single Public Subnet_ and press _Select_.
+4. For _VPC name_, give your VPC a unique name.
+5. Choose _Create VPC_.
+6. When the wizard is finished, choose _OK_.
 
 ### ECS Execution IAM Role (Optional)
 
@@ -39,12 +40,12 @@ Please note that Metaflow bot can re-use existing AWS resources - for example, y
     1. Amazon S3 for data storage
         1. Choose Create Policy to open a new window.
         2. Use the visual service editor to create the policy
-            1. For Service, choose S3.
-            2. For Actions, add _GetObject_ and _ListBucket_ as allowed actions
-            3. For resources, the bucket name should be the same asmetaflow datastore S3 bucket. For object choose _any_ for object name. Choose Save changes.
-            4. Choose Review policy. On the Review policy page, for Name type your own unique name and choose _Create_ policy to finish.
-6. Click the refresh button in the original pane (in Step 4.) and choose the policy that you just created (in Step 5.). Choose Next:tags.
-7. For _Add tags_ (optional), enter any metadata tags you want to associate with the IAM role, and then choose Next: Review.
+            1. For _Service_, choose _S3_.
+            2. For _Actions_, add _GetObject_ and _ListBucket_ as allowed actions
+            3. For _resources_, the bucket name should be the same as metaflow datastore S3 bucket. For object choose _any_ for object name. Choose _Save changes_.
+            4. Choose _Review policy_. On the Review policy page, for _Name_ type your own unique name and choose _Create_ policy to finish.
+6. Click the refresh button in the original pane (in Step 4.) and choose the policy that you just created (in Step 5.). Choose _Next:tags_.
+7. For _Add tags_ (optional), enter any metadata tags you want to associate with the IAM role, and then choose _Next: Review_.
 8. For _Role name_, enter a name for your role and then choose _Create role_ to finish. 
 
 ### ECS Cluster + Fargate Task
@@ -69,7 +70,7 @@ Please note that Metaflow bot can re-use existing AWS resources - for example, y
         4. Under _Advanced container configuration_, in _Environment variables_ add the following values
             1. Set _Key_ as ADMIN_USER_ADDRESS and the _Value_ as the email address of the user in the slack workspace with whom the bot will open a message thread to store state related information.
             2. Set _Key_ as METAFLOW_SERVICE_URL and the _Value_ as the URL to the metadata service.
-            3. Set _Key_ as METAFLOW_DATASTORE_SYSROOT_S3 and the _Value_ as S3 bucket of S3 datastore.
+            3. Set _Key_ as METAFLOW_DATASTORE_SYSROOT_S3 and the _Value_ as S3 bucket URL for metaflow datastore.
             4. Set _Key_ as METAFLOW_DEFAULT_DATASTORE and _Value_ as _s3_.
             5. Set _Key_ as METAFLOW_DEFAULT_METADATA and _Value_ as _service_.
             6. Set _Key_ as USERNAME and _Value_ as _slackbot_.
