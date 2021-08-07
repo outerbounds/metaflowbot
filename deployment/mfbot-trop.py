@@ -23,6 +23,7 @@ from troposphere.ecs import (
     ContainerDefinition,
     Environment,
     LogConfiguration,
+    Secret,
     Service,
     TaskDefinition,
     NetworkConfiguration
@@ -49,7 +50,6 @@ MFS3ROOTPATH = BotDeploymentTemplate.add_parameter(Parameter("MetaflowDatastoreS
                                 Description="Amazon S3 URL for Metaflow DataStore "))
 
 MFS3ARN = Join('',['arn:aws:s3:::',Select(1,Split("s3://",Ref(MFS3ROOTPATH))),])
-#arn:aws:secretsmanager:us-west-2:477710326853:secret:MetaflowBotSecrets-Pd46UG
 MFBOT_SECRETS_ARN = BotDeploymentTemplate.add_parameter(Parameter("MetaflowbotSecretsManagerARN",
                                 Type='String',\
                                 Description="ARN of the secret holding Metaflowbot credentials in Secrets Manager"))
@@ -72,38 +72,28 @@ cluster = BotDeploymentTemplate.add_resource(Cluster("MFBotCluster"))
 
 
 ENV_DICT = {
-    "SLACK_BOT_TOKEN":Join("",[
-                                "{{",
-                                "resolve:secretsmanager:",
-                                Ref(MFBOT_SECRETS_ARN),
-                                ":SecretString:",
-                                Ref(SLACK_BOT_TOKEN),
-                                "}}"
-                            ]),
     "ADMIN_USER_ADDRESS":Ref(ADMIN_USER_ADDRESS),
-    "SLACK_APP_TOKEN":Join("",[
-                                "{{",
-                                "resolve:secretsmanager:",
-                                Ref(MFBOT_SECRETS_ARN),
-                                ":SecretString:",
-                                Ref(SLACK_APP_TOKEN),
-                                "}}"
-                            ]),
-    "USERNAME":"slackbot",
-    "METAFLOW_SERVICE_AUTH_KEY":Join("",[
-                                        "{{",
-                                        "resolve:secretsmanager:",
-                                        Ref(MFBOT_SECRETS_ARN),
-                                        ":SecretString:",
-                                        Ref(METADATA_AUTH),
-                                        "}}"
-                                    ]),
+    "USERNAME":"slackbot",    
     "METAFLOW_SERVICE_URL":Ref(METADATA_SERVICE_URL),
     "METAFLOW_DATASTORE_SYSROOT_S3":Ref(MFS3ROOTPATH),
     "METAFLOW_DEFAULT_DATASTORE":"s3",
     "METAFLOW_DEFAULT_METADATA":"service"
 }
 
+# best practices from : https://docs.aws.amazon.com/AmazonECS/latest/developerguide/specifying-sensitive-data-secrets.html
+SECRETS =  [
+    Secret(
+        Name='METAFLOW_SERVICE_AUTH_KEY',
+        ValueFrom=Join("",[Ref(MFBOT_SECRETS_ARN),":",Ref(METADATA_AUTH),"::"])
+    ),
+    Secret(
+        Name='SLACK_APP_TOKEN',
+        ValueFrom=Join("",[Ref(MFBOT_SECRETS_ARN),":",Ref(SLACK_APP_TOKEN),"::"])
+    ),Secret(
+        Name='SLACK_BOT_TOKEN',
+        ValueFrom=Join("",[Ref(MFBOT_SECRETS_ARN),":",Ref(SLACK_BOT_TOKEN),"::"])
+    )
+]
 
 # task role vs execution role : 
 # https://selfoverflow.com/questions/48999472/difference-between-aws-elastic-container-services-ecs-executionrole-and-taskr/49947471
@@ -296,7 +286,8 @@ task_definition = BotDeploymentTemplate.add_resource(
                 Essential=True,
                 Environment = [
                     Environment(**dict(Name=k,Value=v)) for k,v in ENV_DICT.items()
-                ]
+                ],
+                Secrets=SECRETS
             )
         ],
     )

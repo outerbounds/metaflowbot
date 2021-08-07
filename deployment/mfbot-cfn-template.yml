@@ -115,37 +115,10 @@ Resources:
     Properties:
       ContainerDefinitions:
         - Environment:
-            - Name: SLACK_BOT_TOKEN
-              Value: !Join
-                - ''
-                - - '{{'
-                  - 'resolve:secretsmanager:'
-                  - !Ref 'MetaflowbotSecretsManagerARN'
-                  - ':SecretString:'
-                  - !Ref 'SlackBotTokenParameterKey'
-                  - '}}'
             - Name: ADMIN_USER_ADDRESS
               Value: !Ref 'AdminEmailAddress'
-            - Name: SLACK_APP_TOKEN
-              Value: !Join
-                - ''
-                - - '{{'
-                  - 'resolve:secretsmanager:'
-                  - !Ref 'MetaflowbotSecretsManagerARN'
-                  - ':SecretString:'
-                  - !Ref 'SlackAppTokenParameterKey'
-                  - '}}'
             - Name: USERNAME
               Value: slackbot
-            - Name: METAFLOW_SERVICE_AUTH_KEY
-              Value: !Join
-                - ''
-                - - '{{'
-                  - 'resolve:secretsmanager:'
-                  - !Ref 'MetaflowbotSecretsManagerARN'
-                  - ':SecretString:'
-                  - !Ref 'MetadataServiceAuthParameterKey'
-                  - '}}'
             - Name: METAFLOW_SERVICE_URL
               Value: !Ref 'MetadataServiceUrl'
             - Name: METAFLOW_DATASTORE_SYSROOT_S3
@@ -157,6 +130,28 @@ Resources:
           Essential: true
           Image: valaygaurang/metaflowbot
           Name: metaflowbot
+          Secrets:
+            - Name: METAFLOW_SERVICE_AUTH_KEY
+              ValueFrom: !Join
+                - ''
+                - - !Ref 'MetaflowbotSecretsManagerARN'
+                  - ':'
+                  - !Ref 'MetadataServiceAuthParameterKey'
+                  - '::'
+            - Name: SLACK_APP_TOKEN
+              ValueFrom: !Join
+                - ''
+                - - !Ref 'MetaflowbotSecretsManagerARN'
+                  - ':'
+                  - !Ref 'SlackAppTokenParameterKey'
+                  - '::'
+            - Name: SLACK_BOT_TOKEN
+              ValueFrom: !Join
+                - ''
+                - - !Ref 'MetaflowbotSecretsManagerARN'
+                  - ':'
+                  - !Ref 'SlackBotTokenParameterKey'
+                  - '::'
       Cpu: '4096'
       ExecutionRoleArn: !GetAtt 'EcsClusterRole.Arn'
       Memory: '8192'
