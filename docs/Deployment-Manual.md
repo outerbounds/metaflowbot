@@ -70,14 +70,15 @@ Please note that Metaflow bot can re-use existing AWS resources - for example, y
             2. Set _outerbounds/metaflowbot_ as the _Image_.
             3. Leave other options as is.
             4. Under _Advanced container configuration_, in _Environment variables_ add the following values
-                1. Set _Key_ as ADMIN_USER_ADDRESS and the _Value_ as metaflow.
-                2. Set _Key_ as METAFLOW_SERVICE_URL and the _Value_ as metaflow.
+                1. Set _Key_ as ADMIN_USER_ADDRESS and the _Value_ as the email address of the user in the slack workspace with whom the bot will open a message thread to store state related information.
+                2. Set _Key_ as METAFLOW_SERVICE_URL and the _Value_ as the URL to the metadata service.
                 3. Set _Key_ as METAFLOW_DATASTORE_SYSROOT_S3 and the _Value_ as S3 bucket of S3 datastore.
                 4. Set _Key_ as METAFLOW_DEFAULT_DATASTORE and _Value_ as _s3_.
                 5. Set _Key_ as METAFLOW_DEFAULT_METADATA and _Value_ as _service_.
                 6. Set _Key_ as USERNAME and _Value_ as _slackbot_.
                 7. Set _Key_ as SLACK_APP_TOKEN and _Value_ as the SLACK_APP_TOKEN retrieved from [slack](./Setup.md#slack-setup).
                 8. Set _Key_ as SLACK_BOT_TOKEN and _Value_ as the SLACK_BOT_TOKEN retrieved from [slack](./Setup.md#slack-setup).
+                9. If your metadata service has an authentication key to it then Set _Key_ as METAFLOW_SERVICE_AUTH_KEY and value as the authentication token of the metadata service.
             5. Choose Add.
         5. Choose Create.
     7. _Choose_ _Clusters_ in the left side pane and select the cluster you created in Step 4.
