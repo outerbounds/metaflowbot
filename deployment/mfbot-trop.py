@@ -1,4 +1,5 @@
 
+import troposphere
 import troposphere.ec2 as ec2
 import troposphere.elasticloadbalancing as elb
 from troposphere import (
@@ -8,9 +9,13 @@ from troposphere import (
     Region,
     Select,
     Split,
+    StackName,
     Template,
     Join,
     GetAtt,
+)
+from troposphere.logs import (
+    LogGroup
 )
 from troposphere.iam import (
     Role,
@@ -50,7 +55,7 @@ MFS3ROOTPATH = BotDeploymentTemplate.add_parameter(Parameter("MetaflowDatastoreS
                                 Description="Amazon S3 URL for Metaflow DataStore "))
 
 MFS3ARN = Join('',['arn:aws:s3:::',Select(1,Split("s3://",Ref(MFS3ROOTPATH))),])
-MFBOT_SECRETS_ARN = BotDeploymentTemplate.add_parameter(Parameter("MetaflowbotSecretsManagerARN",
+Metaflowbot_SECRETS_ARN = BotDeploymentTemplate.add_parameter(Parameter("MetaflowbotSecretsManagerARN",
                                 Type='String',\
                                 Description="ARN of the secret holding Metaflowbot credentials in Secrets Manager"))
 
@@ -68,7 +73,7 @@ SLACK_BOT_TOKEN = BotDeploymentTemplate.add_parameter(Parameter("SlackBotTokenPa
                                 Default="SLACK_BOT_TOKEN_KEY",\
                                 Description="Key for SLACK_BOT_TOKEN parameter in Secrets Manager."))
 
-cluster = BotDeploymentTemplate.add_resource(Cluster("MFBotCluster"))
+cluster = BotDeploymentTemplate.add_resource(Cluster("MetaflowbotCluster"))
 
 
 ENV_DICT = {
@@ -84,14 +89,14 @@ ENV_DICT = {
 SECRETS =  [
     Secret(
         Name='METAFLOW_SERVICE_AUTH_KEY',
-        ValueFrom=Join("",[Ref(MFBOT_SECRETS_ARN),":",Ref(METADATA_AUTH),"::"])
+        ValueFrom=Join("",[Ref(Metaflowbot_SECRETS_ARN),":",Ref(METADATA_AUTH),"::"])
     ),
     Secret(
         Name='SLACK_APP_TOKEN',
-        ValueFrom=Join("",[Ref(MFBOT_SECRETS_ARN),":",Ref(SLACK_APP_TOKEN),"::"])
+        ValueFrom=Join("",[Ref(Metaflowbot_SECRETS_ARN),":",Ref(SLACK_APP_TOKEN),"::"])
     ),Secret(
         Name='SLACK_BOT_TOKEN',
-        ValueFrom=Join("",[Ref(MFBOT_SECRETS_ARN),":",Ref(SLACK_BOT_TOKEN),"::"])
+        ValueFrom=Join("",[Ref(Metaflowbot_SECRETS_ARN),":",Ref(SLACK_BOT_TOKEN),"::"])
     )
 ]
 
@@ -139,7 +144,7 @@ EcsTaskRole = BotDeploymentTemplate.add_resource(
 PolicyEcr = BotDeploymentTemplate.add_resource(
     PolicyType(
         "PolicyEcr",
-        PolicyName="MfbotEcrPolicy",
+        PolicyName="MetaflowbotEcrPolicy",
         PolicyDocument={
             "Version": "2012-10-17",
             "Statement": [
@@ -153,6 +158,8 @@ PolicyEcr = BotDeploymentTemplate.add_resource(
                         "ecr:GetDownloadUrlForLayer",
                         "ecr:BatchGetImage",
                         "ecr:BatchCheckLayerAvailability",
+                        "logs:CreateLogStream",
+                        "logs:PutLogEvents"
                     ],
                     "Resource": ["*"],
                     "Effect": "Allow",
@@ -166,7 +173,7 @@ PolicyEcr = BotDeploymentTemplate.add_resource(
 
 secrets_access_policy = BotDeploymentTemplate.add_resource(
     PolicyType(
-        "MFBotSecretAccess",
+        "MetaflowbotSecretAccess",
         # 
         PolicyName='Metaflowbot',
         PolicyDocument= {
@@ -177,7 +184,7 @@ secrets_access_policy = BotDeploymentTemplate.add_resource(
                        "secretsmanager:GetSecretValue",
                     ],
                     "Resource": [
-                        Ref(MFBOT_SECRETS_ARN)
+                        Ref(Metaflowbot_SECRETS_ARN)
                     ],
                     "Effect": "Allow",
                     "Sid": "S3GetObject",
@@ -235,7 +242,7 @@ subnet = BotDeploymentTemplate.add_resource(ec2.Subnet(
     MapPublicIpOnLaunch=True,
 ))
 
-internetgateway = BotDeploymentTemplate.add_resource(ec2.InternetGateway("MFBotInternetGateway"))
+internetgateway = BotDeploymentTemplate.add_resource(ec2.InternetGateway("MetaflowbotInternetGateway"))
 
 net_gw_vpc_attachment = BotDeploymentTemplate.add_resource(
     ec2.VPCGatewayAttachment(
@@ -269,6 +276,17 @@ default_public_route = BotDeploymentTemplate.add_resource(
         GatewayId=Ref(internetgateway),
     )
 )
+LOG_GROUP_STRING = Join("",[
+                            '/ecs/',
+                            StackName,
+                            "-metaflowbot",
+                        ])
+loggroup= BotDeploymentTemplate.add_resource(
+    LogGroup(
+        "MetaflowbotLogGroup",
+        LogGroupName=LOG_GROUP_STRING
+    )
+)
 
 task_definition = BotDeploymentTemplate.add_resource(
     TaskDefinition(
@@ -284,6 +302,14 @@ task_definition = BotDeploymentTemplate.add_resource(
                 Name="metaflowbot",
                 Image="valaygaurang/metaflowbot",
                 Essential=True,
+                LogConfiguration=LogConfiguration(
+                    LogDriver = "awslogs",
+                    Options= {
+                        "awslogs-group": LOG_GROUP_STRING,
+                        "awslogs-region":Region,
+                        "awslogs-stream-prefix": 'ecs'
+                    },
+                ),
                 Environment = [
                     Environment(**dict(Name=k,Value=v)) for k,v in ENV_DICT.items()
                 ],
@@ -295,12 +321,12 @@ task_definition = BotDeploymentTemplate.add_resource(
 
 
 efs_security_group = BotDeploymentTemplate.add_resource(ec2.SecurityGroup(
-    "MFBotSecurityGroup",
+    "MetaflowbotSecurityGroup",
     # Outbound rules
     # https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group-rule.html
     SecurityGroupEgress = [
         ec2.SecurityGroupRule(
-            "MFBotOutboundRules",
+            "MetaflowbotOutboundRules",
             ToPort=65534,
             FromPort=0,
             IpProtocol="tcp",

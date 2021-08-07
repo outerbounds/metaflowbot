@@ -51,48 +51,21 @@ Resources:
     Type: AWS::IAM::Role
   InternetGatewayAttachment:
     Properties:
-      InternetGatewayId: !Ref 'MFBotInternetGateway'
+      InternetGatewayId: !Ref 'MetaflowbotInternetGateway'
       VpcId: !Ref 'MetaflowbotPublicVpc'
     Type: AWS::EC2::VPCGatewayAttachment
-  MFBotCluster:
+  MetaflowbotCluster:
     Type: AWS::ECS::Cluster
-  MFBotInternetGateway:
-    Type: AWS::EC2::InternetGateway
-  MFBotSecretAccess:
-    Properties:
-      PolicyDocument:
-        Statement:
-          - Action:
-              - secretsmanager:GetSecretValue
-            Effect: Allow
-            Resource:
-              - !Ref 'MetaflowbotSecretsManagerARN'
-            Sid: S3GetObject
-        Version: '2012-10-17'
-      PolicyName: Metaflowbot
-      Roles:
-        - !Ref 'EcsClusterRole'
-    Type: AWS::IAM::Policy
-  MFBotSecurityGroup:
-    Properties:
-      GroupDescription: Allow All In and outbound traffic
-      SecurityGroupEgress:
-        - CidrIp: '0.0.0.0/0'
-          FromPort: 0
-          IpProtocol: tcp
-          ToPort: 65534
-      VpcId: !Ref 'MetaflowbotPublicVpc'
-    Type: AWS::EC2::SecurityGroup
   MetaflowbotDeployment:
     Properties:
-      Cluster: !Ref 'MFBotCluster'
+      Cluster: !Ref 'MetaflowbotCluster'
       DesiredCount: 1
       LaunchType: FARGATE
       NetworkConfiguration:
         AwsvpcConfiguration:
           AssignPublicIp: ENABLED
           SecurityGroups:
-            - !Ref 'MFBotSecurityGroup'
+            - !Ref 'MetaflowbotSecurityGroup'
           Subnets:
             - !Ref 'MetaflowbotDeploymentSubnet'
       TaskDefinition: !Ref 'MetaflowbotTaskDefinition'
@@ -107,10 +80,45 @@ Resources:
       MapPublicIpOnLaunch: true
       VpcId: !Ref 'MetaflowbotPublicVpc'
     Type: AWS::EC2::Subnet
+  MetaflowbotInternetGateway:
+    Type: AWS::EC2::InternetGateway
+  MetaflowbotLogGroup:
+    Properties:
+      LogGroupName: !Join
+        - ''
+        - - /ecs/
+          - !Ref 'AWS::StackName'
+          - -metaflowbot
+    Type: AWS::Logs::LogGroup
   MetaflowbotPublicVpc:
     Properties:
       CidrBlock: 10.0.0.0/16
     Type: AWS::EC2::VPC
+  MetaflowbotSecretAccess:
+    Properties:
+      PolicyDocument:
+        Statement:
+          - Action:
+              - secretsmanager:GetSecretValue
+            Effect: Allow
+            Resource:
+              - !Ref 'MetaflowbotSecretsManagerARN'
+            Sid: S3GetObject
+        Version: '2012-10-17'
+      PolicyName: Metaflowbot
+      Roles:
+        - !Ref 'EcsClusterRole'
+    Type: AWS::IAM::Policy
+  MetaflowbotSecurityGroup:
+    Properties:
+      GroupDescription: Allow All In and outbound traffic
+      SecurityGroupEgress:
+        - CidrIp: '0.0.0.0/0'
+          FromPort: 0
+          IpProtocol: tcp
+          ToPort: 65534
+      VpcId: !Ref 'MetaflowbotPublicVpc'
+    Type: AWS::EC2::SecurityGroup
   MetaflowbotTaskDefinition:
     Properties:
       ContainerDefinitions:
@@ -129,6 +137,16 @@ Resources:
               Value: service
           Essential: true
           Image: valaygaurang/metaflowbot
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-group: !Join
+                - ''
+                - - /ecs/
+                  - !Ref 'AWS::StackName'
+                  - -metaflowbot
+              awslogs-region: !Ref 'AWS::Region'
+              awslogs-stream-prefix: ecs
           Name: metaflowbot
           Secrets:
             - Name: METAFLOW_SERVICE_AUTH_KEY
@@ -173,19 +191,21 @@ Resources:
               - ecr:GetDownloadUrlForLayer
               - ecr:BatchGetImage
               - ecr:BatchCheckLayerAvailability
+              - logs:CreateLogStream
+              - logs:PutLogEvents
             Effect: Allow
             Resource:
               - '*'
             Sid: AllowPull
         Version: '2012-10-17'
-      PolicyName: MfbotEcrPolicy
+      PolicyName: MetaflowbotEcrPolicy
       Roles:
         - !Ref 'EcsClusterRole'
     Type: AWS::IAM::Policy
   PublicDefaultRoute:
     Properties:
       DestinationCidrBlock: '0.0.0.0/0'
-      GatewayId: !Ref 'MFBotInternetGateway'
+      GatewayId: !Ref 'MetaflowbotInternetGateway'
       RouteTableId: !Ref 'PublicRouteTable'
     Type: AWS::EC2::Route
   PublicRouteAssociation:
