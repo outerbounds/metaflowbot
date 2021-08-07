@@ -48,7 +48,7 @@ The setup follows two parts.
     ```
 ### Running the bot with docker
 
-You can run the bot with docker using either environment variables or loading the `~/.metaflowconfig` as a volume. Ensure `ADMIN_USER_ADDRESS` environment variable contains the email address of the user in the slack workspace with whom the bot will hold a stateful store.
+You can run the bot with docker using either environment variables or loading the `~/.metaflowconfig` as a volume. Ensure `ADMIN_USER_ADDRESS` environment variable contains the email address of the user in the slack workspace.
 
 1. Running docker container using environment variables
 ```sh
