@@ -48,8 +48,9 @@ The setup follows two parts.
     ```
 ### Running the bot with docker
 
-Use the below command for running the bot container instance on local. You can shed some metaflow variables and load a volume to the `~./metaflowconfig` to set Metaflow config related variables.
+You can run the bot with docker using either environment variables or loading the `~/.metaflowconfig` as a volume.
 
+1. Running docker container using environment variables
 ```sh
 docker run -i -t --rm \
     -e SLACK_BOT_TOKEN=$(echo $SLACK_BOT_TOKEN) \
@@ -61,5 +62,21 @@ docker run -i -t --rm \
     -e METAFLOW_SERVICE_AUTH_KEY=$(echo $METAFLOW_SERVICE_AUTH_KEY) \
     -e METAFLOW_SERVICE_URL=$(echo $METAFLOW_SERVICE_URL) \
     -e METAFLOW_DATASTORE_SYSROOT_S3=$(echo $METAFLOW_DATASTORE_SYSROOT_S3) \
+    -e METAFLOW_DEFAULT_DATASTORE=s3 \
+    -e METAFLOW_DEFAULT_METADATA=service \
+    outerbounds/metaflowbot
+```
+
+2. Running docker container using volume attachment for `~/.metaflowconfig`. 
+```sh
+docker run -it \
+    -v ~/.metaflowconfig:/metaflowconfig --rm \
+    -e SLACK_BOT_TOKEN=$(echo $SLACK_BOT_TOKEN) \
+    -e ADMIN_USER_ADDRESS=valay@outerbounds.co \
+    -e SLACK_APP_TOKEN=$(echo $SLACK_APP_TOKEN) \
+    -e AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY) \
+    -e AWS_ACCESS_KEY_ID=$(echo $AWS_ACCESS_KEY_ID) \
+    -e USERNAME=slackbot \
+    -e METAFLOW_HOME=/.metaflowconfig \
     outerbounds/metaflowbot
 ```
