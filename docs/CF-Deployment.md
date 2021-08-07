@@ -4,8 +4,6 @@ Metaflow bot ships with an [AWS CloudFormation template](../deployment/mfbot-cfn
 
 Deploying the template requires Slack related authentication tokens and metadata service related authentication; These need to be created on [SecretsManager](https://console.aws.amazon.com/secretsmanager). The reference to those secrets will be used in the CloudFormation template deployment. 
 
-Retrieval of slack related tokens is provided [here](./Setup.md). 
-
 The major components of the template are:
 
 1. AWS Identity and Access Management - Set policies for Accessing S3 buckets and secrets needed for deployment. 
@@ -16,7 +14,7 @@ The major components of the template are:
 
 ## Deployment Steps
 
-1. [Configure the bot on the slack workspace and retrieve the SLACK_BOT_TOKEN and SLACK_APP_TOKEN](./Setup#slack-setup)
+1. [Configure the bot on the slack workspace and retrieve the SLACK_BOT_TOKEN and SLACK_APP_TOKEN](./Setup.md#slack-setup)
 
 2. Create a secret on SecretsManager with the keys relating to Metadata service authentication token and Slack bot related tokens. Copy the ARN of the secret
     ![](./images/Secret-manager-setup.png)
