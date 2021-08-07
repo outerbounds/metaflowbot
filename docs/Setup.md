@@ -11,7 +11,7 @@ The setup follows two parts.
         - [Manual Deployment](./Deployment-Manual.md)
 ## Slack setup
 
-1. [Create an App on Slack UI](https://api.slack.com/apps) using provided [manifest](../manifest.yml).
+1. [Create an App on Slack UI](https://api.slack.com/apps) using the [manifest](../manifest.yml) file. The default name of the not is `@flowey`. To customize the name of the bot change `display_information.name` and `bot_user.display_name` in the [manifest](../manifest.yml) file. 
 
     ![](images/slacksetup.png)
 
