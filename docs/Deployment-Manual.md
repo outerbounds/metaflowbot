@@ -8,7 +8,7 @@ Please note that Metaflow bot can re-use existing AWS resources - for example, y
 
 ### Slack Access Tokens
 
-1. [Configure the bot on the slack workspace and retrieve the SLACK_BOT_TOKEN and SLACK_APP_TOKEN](./Setup.md#slack-setup)
+1. [Configure the bot on the slack workspace and retrieve the SLACK_BOT_TOKEN and SLACK_APP_TOKEN.](./Setup.md#slack-setup)
 
 ### VPC 
 
@@ -27,8 +27,8 @@ Please note that Metaflow bot can re-use existing AWS resources - for example, y
 4. For _Select your use case_, choose _Elastic Container Service Task_ and choose _Next: Permissions_.
 5. Choose _AmazonECSTaskExecutionRolePolicy_.
 5. Choose _Next:tags_.
-6. For Add tags (optional), enter any metadata tags you want to associate with the IAM role, and  then choose Next: Review.
-6. For Role name, enter a name for your role and then choose _Create role_ to finish. Note the ARN of the IAM role you just created.
+6. For _Add tags (optional)_, enter any metadata tags you want to associate with the IAM role, and  then choose _Next: Review_.
+6. For _Role name_, enter a name for your role and then choose _Create role_ to finish. Note the ARN of the IAM role you just created.
 
 ### ECS Task IAM Role
 
@@ -38,7 +38,7 @@ Please note that Metaflow bot can re-use existing AWS resources - for example, y
 4. For Select your use case, choose _Elastic Container Service Task_ and choose _Next: Permissions._
 5. Next, we will create a [policy](https://console.aws.amazon.com/iamv2/home#/policies) for Amazon S3 and attach it to this role:
     1. Amazon S3 for data storage
-        1. Choose Create Policy to open a new window.
+        1. Choose _Create Policy_ to open a new window.
         2. Use the visual service editor to create the policy
             1. For _Service_, choose _S3_.
             2. For _Actions_, add _GetObject_ and _ListBucket_ as allowed actions
@@ -51,9 +51,9 @@ Please note that Metaflow bot can re-use existing AWS resources - for example, y
 ### ECS Cluster + Fargate Task
 
 1. Open the [ECS console](https://console.aws.amazon.com/ecs) and from the navigation bar, select the region to use.
-2. Choose _Create Cluster_ under Clusters.
+2. Choose _Create Cluster_ under _Clusters_.
 3. Choose _Networking only_, _Next step_.
-4. Pick a name for _Cluster name_. Don't enable Create VPC. We will use the VPC [we have created previously](#vpc). You can choose to check Enable Container Insights. Choose _Create_.
+4. Pick a name for _Cluster name_. Don't enable Create VPC. We will use the VPC [we have created previously](#vpc). You can choose to check _Enable Container Insights_. Choose _Create_.
 5. Choose _View Cluster_ and choose _Task Definitions_ on the left side pane.
 6. Choose _Create new Task Definition_, _Fargate_ and Next step.
     1. Under _Configure task_ and _container definitions_,
@@ -77,8 +77,8 @@ Please note that Metaflow bot can re-use existing AWS resources - for example, y
             7. Set _Key_ as SLACK_APP_TOKEN and _Value_ as the SLACK_APP_TOKEN retrieved from [slack](./Setup.md#slack-setup).
             8. Set _Key_ as SLACK_BOT_TOKEN and _Value_ as the SLACK_BOT_TOKEN retrieved from [slack](./Setup.md#slack-setup).
             9. If your metadata service has an authentication key to it then Set _Key_ as METAFLOW_SERVICE_AUTH_KEY and value as the authentication token of the metadata service.
-        5. Choose Add.
-    5. Choose Create.
+        5. Choose _Add_.
+    5. Choose _Create_.
 7. _Choose_ _Clusters_ in the left side pane and select the cluster you created in Step 4.
 8. _Choose_ _Create_ under _Services_,
     1. Choose _Fargate_ as _Lauch type_.
