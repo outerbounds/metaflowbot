@@ -51,53 +51,52 @@ Please note that Metaflow bot can re-use existing AWS resources - for example, y
 
 ### ECS Cluster + Fargate Task
 
-1. Create an AWS Fargate Cluster
-    1. Open the [ECS console](https://console.aws.amazon.com/ecs) and from the navigation bar, select the region to use.
-    2. Choose _Create Cluster_ under Clusters.
-    3. Choose _Networking only_, _Next step_.
-    4. Pick a name for _Cluster name_. Don't enable Create VPC. We will use the VPC [we have created previously](#vpc). You can choose to check Enable Container Insights. Choose _Create_.
-    5. Choose _View Cluster_ and choose _Task Definitions_ on the left side pane.
-    6. Choose _Create new Task Definition_, _Fargate_ and Next step.
-        1. Under _Configure task_ and _container definitions_,
-            1. Choose a _Task Definition Name_.
-            2. Choose the _Task Role_ as the one you [just created above](#ecs-task-iam-role).
-        2. Under _Task execution IAM role_, set the _Task execution role_ to _ecsTaskExecutionRole_ or set it to the IAM role created for [ECS execution](#ecs-execution-iam-role). Leave it empty otherwise.
-        3. Under _Task size_,
-            1. Choose 8 GB for _Task memory (GB)_
-            2. Choose 4 vCPU for _Task CPU (vCPU)_.
-        4. Under _Container Definitions_, choose Add container
-            1. Set _metaflowbot_ as the _Container name_.
-            2. Set _outerbounds/metaflowbot_ as the _Image_.
-            3. Leave other options as is.
-            4. Under _Advanced container configuration_, in _Environment variables_ add the following values
-                1. Set _Key_ as ADMIN_USER_ADDRESS and the _Value_ as the email address of the user in the slack workspace with whom the bot will open a message thread to store state related information.
-                2. Set _Key_ as METAFLOW_SERVICE_URL and the _Value_ as the URL to the metadata service.
-                3. Set _Key_ as METAFLOW_DATASTORE_SYSROOT_S3 and the _Value_ as S3 bucket of S3 datastore.
-                4. Set _Key_ as METAFLOW_DEFAULT_DATASTORE and _Value_ as _s3_.
-                5. Set _Key_ as METAFLOW_DEFAULT_METADATA and _Value_ as _service_.
-                6. Set _Key_ as USERNAME and _Value_ as _slackbot_.
-                7. Set _Key_ as SLACK_APP_TOKEN and _Value_ as the SLACK_APP_TOKEN retrieved from [slack](./Setup.md#slack-setup).
-                8. Set _Key_ as SLACK_BOT_TOKEN and _Value_ as the SLACK_BOT_TOKEN retrieved from [slack](./Setup.md#slack-setup).
-                9. If your metadata service has an authentication key to it then Set _Key_ as METAFLOW_SERVICE_AUTH_KEY and value as the authentication token of the metadata service.
-            5. Choose Add.
-        5. Choose Create.
-    7. _Choose_ _Clusters_ in the left side pane and select the cluster you created in Step 4.
-    8. _Choose_ _Create_ under _Services_,
-        9. Choose _Fargate_ as _Lauch type_.
-        10. Choose the task definition that you created in Step 6. for _Task Definition_. Pick the latest for _Revision_.
-        11. For _Platform version_ choose _Latest_.
-        12. Leave the _Cluster_ as is (pointing to the cluster that you are configuring).
-        13. Pick a name for _Service name_.
-        14. *Set 1* for _Number of tasks_.
-        15. Choose _Rolling update_ for _Deployment type_.
-    9. Choose _Next step_.
-    10. For _Configure network_, 
-        1. For _Cluster VPC_, choose the VPC that you have created [previously](#vpc).
-        2. Choose the only public subnet.
-    11. For _Load balancing_, choose None as Load balancer type.
-    12. For _Auto-assign public IP_ keep it as _ENABLED_. 
-    13. Choose _Next step_.
-    14. Leave options in _Set Auto Scaling (optional)_ to the default : _Do not adjust the service’s desired count_
-    15. Choose _Next step_ and _Create Service_.
-    16. Choose _View Service_ and wait for the task to get to the running state.
-    17. Once the task is running, check if the slack bot is responding to messages in DM's or in a channel it is invited to.
+1. Open the [ECS console](https://console.aws.amazon.com/ecs) and from the navigation bar, select the region to use.
+2. Choose _Create Cluster_ under Clusters.
+3. Choose _Networking only_, _Next step_.
+4. Pick a name for _Cluster name_. Don't enable Create VPC. We will use the VPC [we have created previously](#vpc). You can choose to check Enable Container Insights. Choose _Create_.
+5. Choose _View Cluster_ and choose _Task Definitions_ on the left side pane.
+6. Choose _Create new Task Definition_, _Fargate_ and Next step.
+    1. Under _Configure task_ and _container definitions_,
+        1. Choose a _Task Definition Name_.
+        2. Choose the _Task Role_ as the one you [just created above](#ecs-task-iam-role).
+    2. Under _Task execution IAM role_, set the _Task execution role_ to _ecsTaskExecutionRole_ or set it to the IAM role created for [ECS execution](#ecs-execution-iam-role). Leave it empty otherwise.
+    3. Under _Task size_,
+        1. Choose 8 GB for _Task memory (GB)_
+        2. Choose 4 vCPU for _Task CPU (vCPU)_.
+    4. Under _Container Definitions_, choose Add container
+        1. Set _metaflowbot_ as the _Container name_.
+        2. Set _outerbounds/metaflowbot_ as the _Image_.
+        3. Leave other options as is.
+        4. Under _Advanced container configuration_, in _Environment variables_ add the following values
+            1. Set _Key_ as ADMIN_USER_ADDRESS and the _Value_ as the email address of the user in the slack workspace with whom the bot will open a message thread to store state related information.
+            2. Set _Key_ as METAFLOW_SERVICE_URL and the _Value_ as the URL to the metadata service.
+            3. Set _Key_ as METAFLOW_DATASTORE_SYSROOT_S3 and the _Value_ as S3 bucket of S3 datastore.
+            4. Set _Key_ as METAFLOW_DEFAULT_DATASTORE and _Value_ as _s3_.
+            5. Set _Key_ as METAFLOW_DEFAULT_METADATA and _Value_ as _service_.
+            6. Set _Key_ as USERNAME and _Value_ as _slackbot_.
+            7. Set _Key_ as SLACK_APP_TOKEN and _Value_ as the SLACK_APP_TOKEN retrieved from [slack](./Setup.md#slack-setup).
+            8. Set _Key_ as SLACK_BOT_TOKEN and _Value_ as the SLACK_BOT_TOKEN retrieved from [slack](./Setup.md#slack-setup).
+            9. If your metadata service has an authentication key to it then Set _Key_ as METAFLOW_SERVICE_AUTH_KEY and value as the authentication token of the metadata service.
+        5. Choose Add.
+    5. Choose Create.
+7. _Choose_ _Clusters_ in the left side pane and select the cluster you created in Step 4.
+8. _Choose_ _Create_ under _Services_,
+    1. Choose _Fargate_ as _Lauch type_.
+    2. Choose the task definition that you created in Step 6. for _Task Definition_. Pick the latest for _Revision_.
+    3. For _Platform version_ choose _Latest_.
+    4. Leave the _Cluster_ as is (pointing to the cluster that you are configuring).
+    5. Pick a name for _Service name_.
+    6. *Set 1* for _Number of tasks_.
+    7. Choose _Rolling update_ for _Deployment type_.
+9. Choose _Next step_.
+10. For _Configure network_, 
+    1. For _Cluster VPC_, choose the VPC that you have created [previously](#vpc).
+    2. Choose the only public subnet.
+11. For _Load balancing_, choose None as Load balancer type.
+12. For _Auto-assign public IP_ keep it as _ENABLED_. 
+13. Choose _Next step_.
+14. Leave options in _Set Auto Scaling (optional)_ to the default : _Do not adjust the service’s desired count_
+15. Choose _Next step_ and _Create Service_.
+16. Choose _View Service_ and wait for the task to get to the running state.
+17. Once the task is running, check if the slack bot is responding to messages in DM's or in a channel it is invited to.
