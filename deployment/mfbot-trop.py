@@ -220,15 +220,9 @@ S3AccessPolicy = BotDeploymentTemplate.add_resource(
         Roles=[Ref(EcsTaskRole)],
     )
 )
-
-# logs:CreateLogGroup/
-
-# S3 bucket name from ARN:
-# https://stackoverflow.com/questions/63002267/how-to-get-s3-bucket-name-from-s3-arn-using-cloudformation
-
 ### Routing and VPC Settings. 
 # Create a VPC with Subnet. The VPC should have an IG attached 
-# and the 
+# and rule created in it's route table; 
 
 vpc = BotDeploymentTemplate.add_resource(ec2.VPC('MetaflowbotPublicVpc',CidrBlock="10.0.0.0/16",))
 
