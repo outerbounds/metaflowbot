@@ -1,9 +1,15 @@
 # Metaflow Bot Setup
 
 The setup follows two parts.
-1. The first part is setting up the bot on Slack to get access tokens.
-2. The second part is running the Bot server locally or via a docker image or [AWS ECS](./Deployment.md).
-## Slack Setup
+
+1. Setting up the bot on [Slack to get access tokens](##Slack-setup).
+2. Running the bot server 
+    - [Locally with pip](###Running-the-bot-locally-with-pip)
+    - [Via a docker image](###Running-the-bot-with-docker)
+    - On AWS:
+        - [CloudFormation](./CF-Deployment.md)
+        - [Manual Deployment](./Deployment-Manual.md)
+## Slack setup
 
 1. [Create an App on Slack UI](https://api.slack.com/apps) using provided [manifest](../manifest.yml).
 
@@ -20,8 +26,7 @@ The setup follows two parts.
 
 ## Running the Bot
 
-
-### From pip
+### Running the bot locally with pip
 
 1. Export the tokens as environment variables :
     
@@ -41,7 +46,7 @@ The setup follows two parts.
     ```sh
     python -m metaflowbot server --admin me@server.com
     ```
-### Running Via Docker Image
+### Running the bot with docker
 
 Use the below command for running the bot container instance on local. You can shed some metaflow variables and load a volume to the `~./metaflowconfig` to set Metaflow config related variables.
 
