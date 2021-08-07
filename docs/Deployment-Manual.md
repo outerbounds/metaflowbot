@@ -42,7 +42,7 @@ Please note that Metaflow bot can re-use existing AWS resources - for example, y
         1. Choose Create Policy to open a new window.
         2. Use the visual service editor to create the policy
             1. For Service, choose S3.
-            2. For Actions, add _GetObject_, _HeadObject_, _ListObjects_ and _ListObjectsV2_ as allowed actions
+            2. For Actions, add _GetObject_ and _ListBucket_ as allowed actions
             3. For resources, the bucket name should be the same asmetaflow datastore S3 bucket. For object choose _any_ for object name. Choose Save changes.
             4. Choose Review policy. On the Review policy page, for Name type your own unique name and choose _Create_ policy to finish.
 6. Click the refresh button in the original pane (in Step 4.) and choose the policy that you just created (in Step 5.). Choose Next:tags.
