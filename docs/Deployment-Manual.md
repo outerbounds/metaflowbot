@@ -12,12 +12,11 @@ Please note that Metaflow bot can re-use existing AWS resources - for example, y
 
 ### VPC 
 
-1. Run the VPC Wizard
-    1. Open the [Amazon VPC console](https://console.aws.amazon.com/vpc/) and in the left navigation pane, choose VPC Dashboard.
-    2. Choose Launch VPC Wizard, VPC with a Single Public Subnet, Select.
-    3. For VPC name, give your VPC a unique name.
-    5. Choose Create VPC.
-    6. When the wizard is finished, choose OK.
+1. Open the [Amazon VPC console](https://console.aws.amazon.com/vpc/) and in the left navigation pane, choose VPC Dashboard.
+2. Choose Launch VPC Wizard, VPC with a Single Public Subnet, Select.
+3. For VPC name, give your VPC a unique name.
+5. Choose Create VPC.
+6. When the wizard is finished, choose OK.
 
 ### ECS Execution IAM Role (Optional)
 
