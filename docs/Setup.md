@@ -2,10 +2,10 @@
 
 The setup follows two parts.
 
-1. Setting up the bot on [Slack to get access tokens](##slack-setup).
+1. Setting up the bot on [Slack to get access tokens](#slack-setup).
 2. Running the bot server 
-    - [Locally with pip](###running-the-bot-locally-with-pip)
-    - [Via a docker image](###running-the-bot-with-docker)
+    - [Locally with pip](#running-the-bot-locally-with-pip)
+    - [Via a docker image](#running-the-bot-with-docker)
     - On AWS:
         - [CloudFormation](./CF-Deployment.md)
         - [Manual Deployment](./Deployment-Manual.md)
