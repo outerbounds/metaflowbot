@@ -18,10 +18,10 @@ The setup follows two parts.
 2. Install the App
     ![](images/app_install.png)
 
-3. Generate App token : This token allows the bot to make a socket connection to slack
+3. Generate App token (SLACK_APP_TOKEN): This token allows the bot to make a socket connection to slack
     ![](images/app-token.png)
 
-4. Generate Bot token : This token allows the bot to make web API calls.
+4. Generate Bot token (SLACK_BOT_TOKEN) : This token allows the bot to make web API calls.
     ![](images/bot-token.png)
 
 ## Running the Bot
