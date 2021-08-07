@@ -205,9 +205,8 @@ S3AccessPolicy = BotDeploymentTemplate.add_resource(
                 {
                     "Action": [
                        "s3:GetObject",
-                       "s3:HeadObject",
-                       "s3:ListObjects",
-                       "s3:ListObjectsV2",
+                       # s3:ListBucket for https://docs.aws.amazon.com/AmazonS3/latest/API/API_ListObjectsV2.html
+                       "s3:ListBucket",
                     ],
                     "Resource": [
                         Join('',[MFS3ARN,'/*'])

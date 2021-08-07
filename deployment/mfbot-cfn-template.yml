@@ -223,9 +223,7 @@ Resources:
         Statement:
           - Action:
               - s3:GetObject
-              - s3:HeadObject
-              - s3:ListObjects
-              - s3:ListObjectsV2
+              - s3:ListBucket
             Effect: Allow
             Resource:
               - !Join
