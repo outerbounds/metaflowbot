@@ -1,5 +1,7 @@
 # Metaflow Bot
 
+## Setup 
+Setup related docs are present [here](./docs/Setup.md)
 ## Documentation
 Thorough Documentation is present in the [Documentation folder](./docs)
 ## Bot Commands
