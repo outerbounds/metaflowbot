@@ -29,7 +29,6 @@ Please note that Metaflow bot can re-use existing AWS resources - for example, y
 5. Choose _Next:tags_.
 6. For Add tags (optional), enter any metadata tags you want to associate with the IAM role, and  then choose Next: Review.
 6. For Role name, enter a name for your role and then choose _Create role_ to finish. Note the ARN of the IAM role you just created.
-![](./images/aws-iam-role-exec.png)
 
 ### ECS Task IAM Role
 
