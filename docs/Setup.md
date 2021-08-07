@@ -26,6 +26,7 @@ The setup follows two parts.
 
 ## Running the Bot
 
+The `metaflowbot` requires an S3 [datastore](https://docs.metaflow.org/metaflow-on-aws/metaflow-on-aws#datastore). It is compatible with bot `local` and `service` based [metadata providers](https://docs.metaflow.org/metaflow/client#metadata-provider). 
 ### Running the bot locally with pip
 
 1. Export the tokens as environment variables :
@@ -46,6 +47,8 @@ The setup follows two parts.
     ```sh
     python -m metaflowbot server --admin me@server.com
     ```
+
+4. If you are running the bot locally with a local [metadata provider](https://docs.metaflow.org/metaflow/client#metadata-provider), then run the above command inside the directory where the `.metaflow` folder is present.
 ### Running the bot with docker
 
 You can run the bot with docker using either environment variables or loading the `~/.metaflowconfig` as a volume. Ensure `ADMIN_USER_ADDRESS` environment variable contains the email address of the user in the slack workspace.
