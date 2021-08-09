@@ -1,6 +1,9 @@
 # Metaflowbot - Slack Bot for your Metaflow flows!
 
-The Slack bot for Metaflow makes it fun and easy to monitor your Metaflow runs, past and present. Imagine starting a training run that lasts for hours - you can now monitor it anywhere using Slack on your mobile device! You can converse with the bot over direct messages or or invite the bot to a channel.
+The Slack bot for Metaflow makes it fun and easy to monitor your Metaflow runs, past and present. Imagine starting a training run that lasts for hours - you can now monitor it anywhere using Slack on your mobile device!
+
+![2021-08-09 15 47 13](https://user-images.githubusercontent.com/763451/128784255-d3dd8dca-d6fe-4a0b-8ce2-2d7cbfddb1da.gif)
+
 
 The bot is [easy to deploy](./docs/deployment.md): It is just a Python process with few external dependencies - no databases needed. Its [security footprint is small](./docs/slack-scopes.md) as it uses only a tightly scoped set of Slack calls. During development you can run the bot on any workstation, so it is quick to [iterate on custom actions](./docs/creating-custom-actions.md) and extend it to suit your needs. For production deployments the bot ships with a [CloudFormation template](./deployment/mfbot-cfn-template.yml) for automating your deployments to AWS.
 
