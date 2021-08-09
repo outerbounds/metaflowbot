@@ -1,11 +1,11 @@
-# Creating Custom Metaflow Bot Actions
+# Create Your Own Bot Action
+The initial version of the bot ships with actions that allow you to monitor the status of Metaflow runs, past and present. Imagine starting a training run that lasts for hours - you can now monitor it anywhere using Slack on your mobile device! You can converse with the bot over direct messages or or invite the bot to a channel.
 
-The `metaflowbot.actions` follows [`pkgutil` style Namespace packaging.]((https://packaging.python.org/guides/packaging-namespace-packages/#pkgutil-style-namespace-packages).)
+With the diversity of machine learning and data science use cases, we have wanted to make it easy to extend the bot with new actions. As an example, we ship a [simple jokes command](https://github.com/outerbounds/metaflowbot-jokes-action) :clown_face:. You can use it as a template to create custom actions which can be enabled just by doing a `pip install`. We would love to see people contributing actions of all kinds - please share with us (slack.outerbounds.co) if you have any ideas or prototypes!
 
-An example of how to implement pkgutil style [subpackage](https://github.com/pypa/sample-namespace-packages/tree/master/pkgutil) can be found here.
 
 ### How To Create Your Own Bot Action
-Create your custom action with the following folder structure
+Create your own custom action by creating a Python package with the following folder structure -
 
 ```
 your_bot_action/ # the name of this dir doesn't matter
@@ -21,7 +21,7 @@ your_bot_action/ # the name of this dir doesn't matter
 .
 ```
 
-Every module must contain a `rules.yml`, a `__init__.py`, and a module that contains click commands imported from `metaflowbot.cli.actions`. Every rule in the `rules.yml` should follow [this](./Architecture.md##Rule) structure
+Every module must contain a `rules.yml`, a `__init__.py`, and a module that contains click commands imported from `metaflowbot.cli.actions`. Every rule in the `rules.yml` should follow [this](./architecture.md##Rule) structure
 
 The `__init__.py` inside an installable action must contain the following code to integrate with `metaflowbot`'s actions
 ```python
@@ -34,9 +34,9 @@ RULES = MFBRules.make_subpackage_rules(data)
 from . import commands
 ```
 
-### Locally Development of Actions 
+#### Locally Development
 
-Export the tokens as environment variables :
+Export the slack tokens as environment variables :
 
 ```sh
 export SLACK_APP_TOKEN=xapp-1-AAAAAAAAAAA-2222222222222-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -51,6 +51,3 @@ pip install -e ./<PATH_TO_metaflowbot_action_directory>
 ```
 
 - If you are running the bot locally with a local metadata provider, then run the above command inside the directory where the `.metaflow` folder is present.
-
-### Examples
-- [Jokes Command](https://github.com/outerbounds/metaflowbot-jokes-action)
