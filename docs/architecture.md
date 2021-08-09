@@ -1,8 +1,8 @@
 
-# Event Lifecycle of Bot
+# Metaflowbot Event Lifecycle
 ![](images/slackbot-event-lifecycle.jpg)
 
-The `MFBServer` listens to events from slack via `MFBSlackClientV2`and converts then to internal event representation. These events are matched with rules to and based on the matched rules an action is invoked.
+`MFBServer` listens to events from Slack via `MFBSlackClientV2`and converts then to internal event representation. These events are matched with rules to and based on the matched rules an action is invoked.
 
 In the above event lifecycle, the `metaflowbot` uses Slack as a stateful store for storing context about threads. When the Bot detects a `state_change` event, its stores its contents in the `MFBState` [Object](../metaflowbot/state.py).
 
