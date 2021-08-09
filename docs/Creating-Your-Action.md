@@ -34,5 +34,23 @@ RULES = MFBRules.make_subpackage_rules(data)
 from . import commands
 ```
 
+### Locally Development of Actions 
+
+Export the tokens as environment variables :
+
+```sh
+export SLACK_APP_TOKEN=xapp-1-AAAAAAAAAAA-2222222222222-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+export SLACK_BOT_TOKEN=xoxb-2222222222222-2222222222222-AAAAAAAAAAAAAAAAAAAAAAAA
+```
+
+- Install `metaflowbot` repository and install your custom development repo; Ensure you have set the `PYTHONPATH` correctly so that `metaflowbot` can be resolved. 
+
+```sh
+pip install metaflowbot
+pip install -e ./<PATH_TO_metaflowbot_action_directory>
+```
+
+- If you are running the bot locally with a local metadata provider, then run the above command inside the directory where the `.metaflow` folder is present.
+
 ### Examples
 - [Jokes Command](https://github.com/outerbounds/metaflowbot-jokes-action)
