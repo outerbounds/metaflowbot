@@ -293,7 +293,7 @@ task_definition = BotDeploymentTemplate.add_resource(
         ContainerDefinitions=[
             ContainerDefinition(
                 Name="metaflowbot",
-                Image="valaygaurang/metaflowbot",
+                Image="outerbounds/metaflowbot",
                 Essential=True,
                 LogConfiguration=LogConfiguration(
                     LogDriver = "awslogs",

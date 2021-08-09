@@ -136,7 +136,7 @@ Resources:
             - Name: METAFLOW_DEFAULT_METADATA
               Value: service
           Essential: true
-          Image: valaygaurang/metaflowbot
+          Image: outerbounds/metaflowbot
           LogConfiguration:
             LogDriver: awslogs
             Options:
