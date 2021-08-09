@@ -1,4 +1,4 @@
-# Metaflow Bot
+# Metaflow Slack Bot
 
 ## Table Of Contents
 
