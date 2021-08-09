@@ -25,6 +25,10 @@ Deploying the Metaflowbot involves -
 4. Generate Bot token (`SLACK_BOT_TOKEN`) : This token allows the Metaflowbot to make web API calls and will be used later to configure the bot.
     ![](images/bot-token.png)
 
+5. Here is a walkthrough
+    ![ezgif-6-e492971fc733](https://user-images.githubusercontent.com/763451/128785552-42fd0e17-ea91-40b4-9183-ee98c87a0ed5.gif)
+
+
 ## Running the Metaflowbot server
 
 ### locally with pip
