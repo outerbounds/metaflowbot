@@ -1,16 +1,18 @@
-# Metaflow Bot
+# Metaflowbot - Slack Bot for your Metaflow flows!
 
-## Setup 
-Setup related docs are present [here](./docs/Setup.md)
-## Documentation
-Thorough Documentation is present in the [Documentation folder](./docs)
-## Bot Commands
+The Slack bot for Metaflow makes it fun and easy to monitor your Metaflow runs, past and present. Imagine starting a training run that lasts for hours - you can now monitor it anywhere using Slack on your mobile device! You can converse with the bot over direct messages or or invite the bot to a channel.
 
-- `@flowey help` | `@flowey hi` : Help
+The bot is [easy to deploy](./docs/deployment.md): It is just a Python process with few external dependencies - no databases needed. Its [security footprint is small](./docs/slack-scopes.md) as it uses only a tightly scoped set of Slack calls. During development you can run the bot on any workstation, so it is quick to [iterate on custom actions](./docs/creating-custom-actions.md) and extend it to suit your needs. For production deployments the bot ships with a [CloudFormation template](./deployment/mfbot-cfn-template.yml) for automating your deployments to AWS.
+
+## Communicating with the bot
+
+There are two ways interact with the Metaflow bot. You can invite the bot on a `channel` or directly speak to it via `direct message`.
+
+- `@flowey help` : Help
 
 - `@flowey tell me a joke`
 
-- `@flowey inspect` | `@flowey how to inspect` : How to inspect
+- `@flowey how to inspect` : How to inspect
 
 - `@flowey inspect HelloFlow` : Inspect `Run`s of a particular `Flow`
 
@@ -22,27 +24,7 @@ Thorough Documentation is present in the [Documentation folder](./docs)
 
 - `@flowey inspect the latest run of HelloFlow` : Inspect an individual `Run` instance
 
-- `@flowey inspect dberg's latest run of HelloFlow` : Inspect an individual `Run` instance
+- `@flowey inspect savin's latest run of HelloFlow` : Inspect an individual `Run` instance
 
 
-## Communicating with the bot
-
-There are two ways interact with the Metaflow bot. You can invite the bot on a `channel` or directly speak to it via `direct message`. For either of the two ways, the following is the general behavior of the bot:
-
-> *When a user messages the bot, the bot will open a new message thread and will engage with the user on the same thread. The user can open multiple threads with the bot. Each thread is an independent discussion*
-
-The following are interaction/UX restrictions based on where the user is conversing with the Metaflow bot.
-### Communicating with the bot on a channel
-
-The current [manifest.yml](./manifest.yml) only supports `app_mention` and `message.im` events. This means that users need to specifically mention `@flowey` or `@custombotname` before a command when the bot is invited to a channel. This constraint ensures we don't listen to *all* messages on a channel; only the ones where the bot is called.
-
-### Communicating with the bot through direct messages
-
-Users can message the bot without `@` mentions via direct messages. The bot will support the same command list.
-
-## References:
-
-- [Slack Permission Scopes](https://api.slack.com/scopes)
-- [Slack Events](https://api.slack.com/events)
-- [Slack Socket Mode](https://slack.dev/python-slack-sdk/socket-mode/index.html#socketmodeclient)
-- [How to make threads in slack via python API](https://slack.dev/python-slack-sdk/web/index.html)
+If you require some customization for your deployment or need additional help, please feel free to reach out to us at http://slack.outerbounds.co. We are very happy to help!
