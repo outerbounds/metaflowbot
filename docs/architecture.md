@@ -1,8 +1,8 @@
 
-# Event Lifecycle of Bot
-![](images/slack-bot-event-lifecycle.jpg)
+# Metaflowbot Event Lifecycle
+![](images/slackbot-event-lifecycle.jpg)
 
-The `MFBServer` listens to events from slack via `MFBSlackClientV2`and converts then to internal event representation. These events are matched with rules to and based on the matched rules an action is invoked.
+`MFBServer` listens to events from Slack via `MFBSlackClientV2`and converts then to internal event representation. These events are matched with rules to and based on the matched rules an action is invoked.
 
 In the above event lifecycle, the `metaflowbot` uses Slack as a stateful store for storing context about threads. When the Bot detects a `state_change` event, its stores its contents in the `MFBState` [Object](../metaflowbot/state.py).
 
@@ -29,12 +29,22 @@ while server runs forever: # metaflowbot.server.MFBServer.loop_forever()
                 # Calls MFBServer._take_action
                 # Every action is invoked as a seperate python process.
 ```
+## Rule 
+
+- A basic rule looks like the following:
+
+```yml
+
+- name: Generic help fallback # Name of the rule
+  event_type: user_message # Type of event the rule needs to filter
+  message: help(.*)|how to(.*) # pattern to use when filtering the message
+  action:
+    op: new-thread # Operation in metaflowbot.actions.<action_name>
+    create-thread: false # Arguement for the action to be invoked. 
+
+```
 
 ## Events
-
-### `lost_process`
-
-> Event created when processed dead processes are detected **(?)**
 ### `new_thread`
 
 > When a completely new thread is created

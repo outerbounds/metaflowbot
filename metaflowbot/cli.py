@@ -81,7 +81,7 @@ def cli(
     is_flag=True,
     default=False,
     help="Initialize a new admin thread in a DM between "
-    "@metaflow and the admin user.",
+    "metaflowbot and the admin user.",
 )
 @click.option(
     "--load-state/--no-load-state",

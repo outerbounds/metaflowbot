@@ -18,7 +18,7 @@ def get_version():
     with open(os.path.join("metaflowbot", "version.py")) as fh:
         for line in fh:
             if line.startswith("__version__ = "):
-                return line.split()[-1].strip().strip("'")
+                return line.split()[-1].strip().strip("'").replace("\"","")
 
 
 setuptools.setup(

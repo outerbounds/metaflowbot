@@ -1,8 +1,11 @@
-# Metaflow Bot
+👋
 
-## Table Of Contents
+If you are interested in deploying the Metaflowbot (either locally or on AWS), take a look at our [deployment guide](./deployment.md).
 
-1. [Quick Setup And Running the Bot](./Setup.md)
-2. [Bot Code Architecture](./Architecture.md)
-3. [Slack Permissions and Scopes](./Scopes.md)
-4. [Creating Custom/New Actions](Creating-Your-Action.md)
+If you are curious to add more functionality to the bot by creating new commands and actions, you can get started [here](./creating-custom-actions.md). 
+
+If you would like to understand how the bot works, [this article](./architecture.md) is a good starting point. For the security conscious, here are the [Slack scopes](./slack-scopes.md) that Metaflowbot requires to function.
+
+If you would like any assistance, please reach out to as at http://slack.outerbounds.co
+
+

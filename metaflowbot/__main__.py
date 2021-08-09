@@ -9,7 +9,7 @@ import click
 # `action_loader` to be loaded first
 from . import action_loader, cli
 from .exceptions import MFBException
-
+import os
 
 class CliState(object):
     def __init__(self):
@@ -19,8 +19,9 @@ class CliState(object):
         self.thread = None
         self.sc = None
 
-
 def main():
+    if os.environ.get('USERNAME',None) is None:
+        os.environ['USERNAME'] = 'metaflowbot'
     try:
         cli.cli(auto_envvar_prefix="MFB", obj=CliState())
     except cli.MFBException as ex:

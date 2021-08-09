@@ -71,7 +71,7 @@ class NoRuns(RunResolverException):
 STYLES = [  # [Run/ID]
     "(?P<flow>[a-z0-9_]+)/(?P<runid>[a-z0-9_\-]+)",
     # (someone's / the) (latest run of) [flow], (tagged tag)
-    "((?P<user>[a-z]+)'s?|the)? ?(?P<latest>latest run of )?"
+    "((?P<user>[a-z0-9_\-]+)'s?|the)? ?(?P<latest>latest run of )?"
     "(?P<flow>[a-z0-9_]+),?( tagged (?P<tag>.+))?",
 ]
 
