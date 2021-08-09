@@ -1,6 +1,6 @@
 # Metaflowbot - Slack Bot for your Metaflow flows!
 
-The Slack bot for Metaflow makes it fun and easy to monitor your Metaflow runs, past and present. Imagine starting a training run that lasts for hours - you can now monitor it anywhere using Slack on your mobile device!
+Metaflowbot makes it fun and easy to monitor your Metaflow runs, past and present. Imagine starting a training run that lasts for hours - you can now monitor it anywhere using Slack on your mobile device!
 
 ![2021-08-09 15 57 31](https://user-images.githubusercontent.com/763451/128784858-d9e37401-05de-4d02-82c5-29444ab4e1b3.gif)
 
