@@ -1,5 +1,5 @@
 # Slack Permission Scopes
-Current Slack Permission Scopes Based on the current version of the code.
+Current Permission Scopes in use by Metaflowbot.
 
 | Oauth Permissions | Scope meaning                                                                             | Why Needed                                                                         | Needed | Link                                                                                              |
 | ----------------- | ----------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------- |
