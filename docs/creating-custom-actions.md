@@ -1,7 +1,7 @@
 # Create Your Own Bot Action
 The initial version of the bot ships with actions that allow you to monitor the status of Metaflow runs, past and present. Imagine starting a training run that lasts for hours - you can now monitor it anywhere using Slack on your mobile device! You can converse with the bot over direct messages or or invite the bot to a channel.
 
-With the diversity of machine learning and data science use cases, we have wanted to make it easy to extend the bot with new actions. As an example, we ship a [simple jokes command](https://github.com/outerbounds/metaflowbot-jokes-action) :clown_face:. You can use it as a template to create custom actions which can be enabled just by doing a `pip install`. We would love to see people contributing actions of all kinds - please share with us (slack.outerbounds.co) if you have any ideas or prototypes!
+With the diversity of machine learning and data science use cases, we have wanted to make it easy to extend the bot with new actions. As an example, we ship a [simple jokes command](https://github.com/outerbounds/metaflowbot-jokes-action) :clown_face:. You can use it as a template to create custom actions which can be enabled just by doing a `pip install`. We would love to see people contributing actions of all kinds - please share with us (http://slack.outerbounds.co) if you have any ideas or prototypes!
 
 
 ### How To Create Your Own Bot Action
@@ -43,7 +43,7 @@ export SLACK_APP_TOKEN=xapp-1-AAAAAAAAAAA-2222222222222-AAAAAAAAAAAAAAAAAAAAAAAA
 export SLACK_BOT_TOKEN=xoxb-2222222222222-2222222222222-AAAAAAAAAAAAAAAAAAAAAAAA
 ```
 
-- Install `metaflowbot` repository and install your custom development repo; Ensure you have set the `PYTHONPATH` correctly so that `metaflowbot` can be resolved. 
+- Install `metaflowbot` repository and install your custom development repo; ensure you have set the `PYTHONPATH` correctly so that `metaflowbot` can be resolved. 
 
 ```sh
 pip install metaflowbot
