@@ -1,59 +1,53 @@
-# Metaflow Bot Setup
+# Deploying the Metaflowbot
 
-The setup follows two parts.
+Deploying the Metaflowbot involves -
+1. [Setting up the Metaflowbot on Slack](#setting-up-the-metaflowbot-on-slack), and
+2. [Running the Metaflowbot server](#running-the-metaflowbot-server)
+    - [locally with pip](#locally-with-pip)
+    - [via a docker image](#via-a-docker-image)
+    - on AWS:
+        - [with AWS CloudFormation](./CF-Deployment.md)
+        - [manually](./Deployment-Manual.md)
 
-1. Setting up the bot on [Slack to get access tokens](#slack-setup).
-2. Running the bot server 
-    - [Locally with pip](#running-the-bot-locally-with-pip)
-    - [Via a docker image](#running-the-bot-with-docker)
-    - On AWS:
-        - [CloudFormation](./CF-Deployment.md)
-        - [Manual Deployment](./Deployment-Manual.md)
-## Slack setup
+## Setting up the Metaflowbot on Slack
 
-1. [Create an App on Slack UI](https://api.slack.com/apps) using the [manifest](../manifest.yml) file. The default name of the not is `@flowey`. To customize the name of the bot change `display_information.name` and `bot_user.display_name` in the [manifest](../manifest.yml) file. 
+1. [Create an App on Slack UI](https://api.slack.com/apps) using the provided [manifest](../manifest.yml). The default name of the Metaflowbot is `@flowey`. To customize the name of the Metaflowbot, change `display_information.name` and `bot_user.display_name` in the [manifest](../manifest.yml). 
 
     ![](images/slacksetup.png)
 
 2. Install the App
     ![](images/app_install.png)
 
-3. Generate App token (SLACK_APP_TOKEN): This token allows the bot to make a socket connection to slack
+3. Generate an App token (`SLACK_APP_TOKEN`): This token allows the Metaflowbot to make a socket connection to Slack and will be used later to configure the bot.
     ![](images/app-token.png)
 
-4. Generate Bot token (SLACK_BOT_TOKEN) : This token allows the bot to make web API calls.
+4. Generate Bot token (`SLACK_BOT_TOKEN`) : This token allows the Metaflowbot to make web API calls and will be used later to configure the bot.
     ![](images/bot-token.png)
 
-## Running the Bot
+## Running the Metaflowbot server
 
-The `metaflowbot` requires an S3 [datastore](https://docs.metaflow.org/metaflow-on-aws/metaflow-on-aws#datastore). It is compatible with bot `local` and `service` based [metadata providers](https://docs.metaflow.org/metaflow/client#metadata-provider). 
-### Running the bot locally with pip
+### locally with pip
 
-1. Export the tokens as environment variables :
-    
-    ```sh
-    export SLACK_APP_TOKEN=xapp-1-AAAAAAAAAAA-2222222222222-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-    export SLACK_BOT_TOKEN=xoxb-2222222222222-2222222222222-AAAAAAAAAAAAAAAAAAAAAAAA
-    ```
-2. Install `metaflowbot`
+The Metaflowbot server is available as a [pip package from PyPI](https://pypi.org/project/metaflowbot/) and can be directly invoked.
+
+1. Install `metaflowbot` Python package from PyPI
     
     ```sh
     pip install metaflowbot
-    pip install metaflowbot-actions-jokes # Custom action install
+    pip install metaflowbot-actions-jokes # Optional dependency
     ```
 
-3. Run the BOT by providing `--admin` argument with admin user's email address; The bot will open a message thread with the admin user where the bot will maintain state related information.
+2. Launch the Metaflowbot server by providing `--admin` argument with the email address of your slack account; Metaflowbot will open a message thread with you to maintain it's state (as a poor man's database). Replace `SLACK_APP_TOKEN` & `SLACK_BOT_TOKEN` with the values obtained while [setting up the Metaflowbot on Slack](#setting-up-the-metaflowbot-on-slack).
     
     ```sh
-    python -m metaflowbot server --admin me@server.com
+    SLACK_APP_TOKEN=xapp-foo SLACK_BOT_TOKEN=xoxb-bar python -m metaflowbot server --admin me@server.com
     ```
 
-4. If you are running the bot locally with a local [metadata provider](https://docs.metaflow.org/metaflow/client#metadata-provider), then run the above command inside the directory where the `.metaflow` folder is present.
-### Running the bot with docker
+### via a docker image
 
-You can run the bot with docker using either environment variables or loading the `~/.metaflowconfig` as a volume. Ensure `ADMIN_USER_ADDRESS` environment variable contains the email address of the user in the slack workspace.
+The Metaflowbot server is also available as a docker image from [Docker Hub](https://hub.docker.com/repository/docker/outerbounds/metaflowbot). There are multiple ways to configure the image; just ensure that `ADMIN_USER_ADDRESS` environment variable points to your email address in the Slack workspace -
 
-1. Running docker container using environment variables
+- through environment variables
 ```sh
 docker run -i -t --rm \
     -e SLACK_BOT_TOKEN=$(echo $SLACK_BOT_TOKEN) \
@@ -61,7 +55,7 @@ docker run -i -t --rm \
     -e SLACK_APP_TOKEN=$(echo $SLACK_APP_TOKEN) \
     -e AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY) \
     -e AWS_ACCESS_KEY_ID=$(echo $AWS_ACCESS_KEY_ID) \
-    -e USERNAME=$(echo $USERNAME) \
+    -e USERNAME=metaflowbot \
     -e METAFLOW_SERVICE_AUTH_KEY=$(echo $METAFLOW_SERVICE_AUTH_KEY) \
     -e METAFLOW_SERVICE_URL=$(echo $METAFLOW_SERVICE_URL) \
     -e METAFLOW_DATASTORE_SYSROOT_S3=$(echo $METAFLOW_DATASTORE_SYSROOT_S3) \
@@ -70,7 +64,7 @@ docker run -i -t --rm \
     outerbounds/metaflowbot
 ```
 
-2. Running docker container using volume attachment for `~/.metaflowconfig`. 
+- through `~/.metaflowconfig`. 
 ```sh
 docker run -it \
     -v ~/.metaflowconfig:/metaflowconfig --rm \
@@ -79,7 +73,7 @@ docker run -it \
     -e SLACK_APP_TOKEN=$(echo $SLACK_APP_TOKEN) \
     -e AWS_SECRET_ACCESS_KEY=$(echo $AWS_SECRET_ACCESS_KEY) \
     -e AWS_ACCESS_KEY_ID=$(echo $AWS_ACCESS_KEY_ID) \
-    -e USERNAME=slackbot \
+    -e USERNAME=metaflowbot \
     -e METAFLOW_HOME=/.metaflowconfig \
     outerbounds/metaflowbot
 ```
