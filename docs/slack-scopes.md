@@ -17,6 +17,7 @@ Current Permission Scopes in use by Metaflowbot.
 
 1. [`app_metion`](https://api.slack.com/events/app_mention) : To get events when `@` mentioned on channel.  
 2. [`message.im`](https://api.slack.com/events/message.im) : To get direct message events 
+This constraint ensures that the bot won't listen to *all* messages on a channel; only the ones where the bot is specifically tagged.
 
 # Slack API Rate Limits
 
