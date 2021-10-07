@@ -8,8 +8,7 @@ from metaflow.client.filecache import FileCacheException
 from metaflow.exception import MetaflowNotFound
 
 from metaflowbot.cli import action
-from metaflowbot.message_templates.templates import (DATEPARSER,
-                                                     DEFAULT_ERROR_MESSAGE,
+from metaflowbot.message_templates.templates import (DEFAULT_ERROR_MESSAGE,
                                                      HEADINGS,
                                                      SLACK_MAX_BLOCKS,
                                                      error_message)
@@ -82,7 +81,7 @@ def run_status(run):
             if run.successful:
                 parsed_time_string = datetime_response_parsing(
                     (
-                        DATEPARSER(run.finished_at) - DATEPARSER(run.created_at)
+                        run.finished_at - run.created_at
                     ).total_seconds()
                 )
                 return "It ran for %s and finished successfully." % parsed_time_string
@@ -164,7 +163,7 @@ def reply_inspect(obj, run_id):
             flow=run.pathspec.split("/")[0],
             when=run.created_at,
         )
-        ago = timeago.format(DATEPARSER(resolved_run.when), now=datetime.utcnow())
+        ago = timeago.format(resolved_run.when, now=datetime.utcnow())
         run_stat = run_status(run)
         tnc = "_Some information (duration/status) couldn't be "\
         "determined since the flow ran " \

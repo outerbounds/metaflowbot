@@ -8,7 +8,6 @@ from metaflow.metaflow_version import get_version
 
 from ..version import __version__
 
-DATEPARSER = lambda date, format="%Y-%m-%dT%H:%M:%SZ": datetime.strptime(date, format)
 DEFAULT_ERROR_MESSAGE = ":skull_and_crossbones: Oops something went wrong"
 SLACK_MAX_BLOCKS = 50
 

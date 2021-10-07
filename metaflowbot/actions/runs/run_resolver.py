@@ -7,7 +7,6 @@ import timeago
 from metaflow import Flow, namespace
 from metaflow.exception import MetaflowNotFound
 
-from metaflowbot.message_templates.templates import DATEPARSER
 
 ResolvedRun = namedtuple("ResolvedRun", ["id", "flow", "who", "when"])
 
@@ -84,7 +83,7 @@ def running_time(run):
         if run.finished:
             if run.successful:
                 mins = (
-                    DATEPARSER(run.finished_at) - DATEPARSER(run.created_at)
+                    run.finished_at - run.created_at
                 ).total_seconds() / 60
                 return mins
     except:
@@ -116,10 +115,10 @@ def step_runtime(tasks):
     if tasks:
         try:
             end = [
-                DATEPARSER(t.finished_at) for t in tasks if t.finished_at is not None
+                t.finished_at for t in tasks if t.finished_at is not None
             ]
             if all(end) and len(end) > 0:
-                secs = (max(end) - DATEPARSER(tasks[-1].created_at)).total_seconds()
+                secs = (max(end) - tasks[-1].created_at).total_seconds()
                 return datetime_response_parsing(secs)
         except:
             pass
@@ -155,7 +154,7 @@ class RunResolver(object):
             msg.append(
                 " - {x}`{run.id}`{x} _by {run.who}, {when}_ {reason}".format(
                     run=run,
-                    when=timeago.format(DATEPARSER(run.when), now=datetime.utcnow()),
+                    when=timeago.format(run.when, now=datetime.utcnow()),
                     x="~" if exclude else "",
                     reason="(%s)" % exclude if exclude else "",
                 )

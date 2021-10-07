@@ -1,4 +1,4 @@
-metaflow
+metaflow>=2.4.0
 timeago==1.0.15
 pyyaml==5.4.1
 slack_sdk==3.7.0
